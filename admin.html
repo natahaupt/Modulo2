@@ -9,26 +9,31 @@
         h1 { text-align: center; color: #38bdf8; margin-bottom: 5px; }
         p.subtitulo { text-align: center; color: #94a3b8; margin-top: 0; margin-bottom: 30px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
-        .card { background: #1e293b; padding: 20px; border-radius: 12px; border-left: 5px solid #fca5a5; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: all 0.3s; }
+        .card { background: #1e293b; padding: 20px; border-radius: 12px; border-left: 5px solid #fca5a5; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: all 0.3s; position: relative; }
         .card.completado { border-left-color: #38bdf8; background: #172554; }
-        .nombre { font-size: 1.3rem; font-weight: bold; margin-bottom: 15px; color: #f8fafc; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        .nombre { font-size: 1.3rem; font-weight: bold; margin-bottom: 15px; color: #f8fafc; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; padding-right: 70px; }
         .tipo { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; margin-bottom: 5px; }
         .prompt { background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; font-style: italic; font-size: 0.95rem; line-height: 1.5; color: #e2e8f0; }
         .seccion-prompt { margin-bottom: 15px; }
+        
+        /* Botón de borrar */
+        .btn-borrar { position: absolute; top: 15px; right: 15px; background: rgba(234, 32, 39, 0.1); border: 1px solid #EA2027; color: #fca5a5; border-radius: 6px; cursor: pointer; padding: 6px 10px; font-size: 0.85rem; font-weight: bold; transition: 0.3s; }
+        .btn-borrar:hover { background: #EA2027; color: #fff; }
     </style>
 </head>
 <body>
 
     <h1>Recepción de Prompts en Vivo 📡</h1>
-    <p class="subtitulo">Seguimiento de estudiantes - Diplomado CEPIES</p>
+    <p class="subtitulo">Seguimiento de estudiantes - Ing. Mariela Nataly Limachi Limachi</p>
 
     <div id="contenedorPrompts" class="grid">
-        <p style="text-align:center; width:100%; color:#94a3b8;">Esperando las respuestas de los colegas...</p>
+        <p style="text-align:center; width:100%; color:#94a3b8;">Esperando las respuestas de los estudiantes...</p>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        // Importamos doc y deleteDoc para poder borrar
+        import { getFirestore, collection, onSnapshot, query, orderBy, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyA-bFIpc8iRrpmxKh8ih6spxQVytBmFw3I",
@@ -42,6 +47,22 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+
+        // Función global para borrar el tablero del estudiante
+        window.borrarTablero = async function(idsString) {
+            if(confirm("¿Seguro que desea ELIMINAR el trabajo de este estudiante? Esta acción no se puede deshacer.")) {
+                try {
+                    const ids = idsString.split(',');
+                    for(let id of ids) {
+                        if(id) await deleteDoc(doc(db, "prompts", id));
+                    }
+                } catch (error) {
+                    console.error("Error al borrar el documento", error);
+                    alert("Ocurrió un error al intentar borrar.");
+                }
+            }
+        };
+
         const q = query(collection(db, "prompts"), orderBy("timestamp", "asc"));
         
         onSnapshot(q, (snapshot) => {
@@ -49,7 +70,7 @@
             contenedor.innerHTML = ""; 
             
             if (snapshot.empty) {
-                contenedor.innerHTML = '<p style="text-align:center; width:100%; color:#94a3b8;">Esperando las respuestas de los colegas...</p>';
+                contenedor.innerHTML = '<p style="text-align:center; width:100%; color:#94a3b8;">Esperando las respuestas de los estudiantes...</p>';
                 return;
             }
 
@@ -65,13 +86,15 @@
                         nombreOriginal: data.nombre,
                         inicial: null,
                         especializada: null,
-                        primeraFecha: tiempoEnMilisegundos // Guarda la fecha de la primera interacción
+                        primeraFecha: tiempoEnMilisegundos,
+                        docIds: [] // Guardamos los IDs de Firebase para poder borrarlos
                     };
                 }
+                
+                estudiantes[nombreClave].docIds.push(doc.id);
 
                 if (data.tipo.includes("Inicial")) {
                     estudiantes[nombreClave].inicial = data.prompt;
-                    // Asegurar que la primera fecha sea la del prompt inicial
                     if (tiempoEnMilisegundos < estudiantes[nombreClave].primeraFecha) {
                         estudiantes[nombreClave].primeraFecha = tiempoEnMilisegundos;
                     }
@@ -80,7 +103,6 @@
                 }
             });
 
-            // Convertir a lista y ordenar ESTRICTAMENTE por la fecha del primer envío (el prompt básico)
             const listaOrdenada = Object.values(estudiantes).sort((a, b) => a.primeraFecha - b.primeraFecha);
 
             listaOrdenada.forEach(est => {
@@ -88,7 +110,9 @@
                 const completado = est.especializada ? "completado" : "";
                 card.className = `card ${completado}`;
 
-                let html = `<div class="nombre">👤 ${est.nombreOriginal}</div>`;
+                // Botón de borrar integrado en la tarjeta
+                let html = `<button class="btn-borrar" onclick="borrarTablero('${est.docIds.join(',')}')" title="Borrar los envíos de este estudiante">🗑️ Borrar</button>`;
+                html += `<div class="nombre">👤 ${est.nombreOriginal}</div>`;
 
                 html += `<div class="seccion-prompt">
                             <div class="tipo" style="color: #fca5a5;">🎯 Prompt Inicial Básico</div>`;
