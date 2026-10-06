@@ -10,349 +10,72 @@
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Pacifico&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
-        :root {
-            --fondo-oscuro: #0f172a;
-            --fondo-tarjeta: #1e293b;
-            --azul-brillante: #3b82f6;
-            --rojo-cepies: #EA2027;
-            --blanco: #f8fafc;
-        }
-
-        body {
-            font-family: 'Quicksand', sans-serif;
-            font-size: 1.15rem;
-            background: linear-gradient(135deg, var(--fondo-oscuro) 0%, #172554 100%);
-            color: var(--blanco);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        h1, h2, .titulo-candice {
-            font-family: 'Pacifico', cursive;
-            font-weight: 400;
-        }
-
-        header {
-            width: 100%;
-            text-align: center;
-            padding: 2.5rem 1rem 1.5rem;
-            background: transparent;
-        }
-
-        .logo {
-            max-width: 140px;
-            border-radius: 50%;
-            margin-bottom: 1rem;
-            box-shadow: 0 0 20px rgba(234, 32, 39, 0.3);
-            border: 3px solid rgba(255, 255, 255, 0.1);
-            background-color: rgba(255,255,255,0.8);
-        }
-
+        :root { --fondo-oscuro: #0f172a; --fondo-tarjeta: #1e293b; --azul-brillante: #3b82f6; --rojo-cepies: #EA2027; --blanco: #f8fafc; }
+        body { font-family: 'Quicksand', sans-serif; font-size: 1.15rem; background: linear-gradient(135deg, var(--fondo-oscuro) 0%, #172554 100%); color: var(--blanco); margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        h1, h2, .titulo-candice { font-family: 'Pacifico', cursive; font-weight: 400; }
+        header { width: 100%; text-align: center; padding: 2.5rem 1rem 1.5rem; }
+        .logo { max-width: 140px; border-radius: 50%; margin-bottom: 1rem; box-shadow: 0 0 20px rgba(234, 32, 39, 0.3); border: 3px solid rgba(255, 255, 255, 0.1); background-color: rgba(255,255,255,0.8); }
         h1 { font-size: 2.2rem; margin: 0.2rem 0; text-shadow: 0 2px 4px rgba(0,0,0,0.5); letter-spacing: 1px; }
-        h2 { font-size: 1.8rem; color: #cbd5e1; margin: 0.2rem 0; font-family: 'Quicksand', sans-serif; font-weight: 600; }
-        h3 { font-size: 1.3rem; margin: 0.5rem 0; color: #94a3b8; font-family: 'Quicksand', sans-serif; }
+        h2 { font-size: 1.8rem; color: #cbd5e1; margin: 0.2rem 0; font-weight: 600; }
+        h3 { font-size: 1.3rem; margin: 0.5rem 0; color: #94a3b8; }
+        .author { margin-top: 1.5rem; font-size: 1.2rem; font-weight: 700; color: #fff; background: var(--rojo-cepies); display: inline-block; padding: 8px 25px; border-radius: 50px; box-shadow: 0 4px 15px rgba(234, 32, 39, 0.4); }
+
+        .container { width: 95%; max-width: 1500px; margin: 1rem auto 4rem; position: relative; }
         
-        .author { 
-            margin-top: 1.5rem; 
-            font-size: 1.2rem;
-            font-weight: 700; 
-            color: #fff; 
-            background: var(--rojo-cepies);
-            display: inline-block; 
-            padding: 8px 25px; 
-            border-radius: 50px;
-            box-shadow: 0 4px 15px rgba(234, 32, 39, 0.4);
-            font-family: 'Quicksand', sans-serif;
-        }
-
-        .container {
-            width: 95%;
-            max-width: 1500px;
-            margin: 1rem auto 4rem;
-            position: relative;
-        }
-
-        .section {
-            background: rgba(30, 41, 59, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            margin-bottom: 2rem;
-            display: none;
-            max-width: 850px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .section.active {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-            animation: fadeIn 0.5s ease-out forwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .section { background: rgba(30, 41, 59, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); padding: 2.5rem; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); margin-bottom: 2rem; display: none; max-width: 850px; margin-left: auto; margin-right: auto; }
+        .section.active { display: block; animation: fadeIn 0.5s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         .form-group { margin-bottom: 1.8rem; }
-
-        label {
-            display: block;
-            font-weight: 700;
-            margin-bottom: 0.8rem;
-            color: #e2e8f0;
-            font-size: 1.2rem;
-        }
-
-        input[type="text"], textarea {
-            width: 100%;
-            padding: 16px;
-            background: rgba(15, 23, 42, 0.6);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            color: #fff;
-            border-radius: 12px;
-            box-sizing: border-box;
-            font-family: 'Quicksand', sans-serif;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-        }
-
-        input[type="text"]:focus, textarea:focus {
-            outline: none;
-            border-color: var(--azul-brillante);
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
-            background: rgba(15, 23, 42, 0.9);
-        }
-
+        label { display: block; font-weight: 700; margin-bottom: 0.8rem; color: #e2e8f0; font-size: 1.2rem; }
+        input[type="text"], textarea { width: 100%; padding: 16px; background: rgba(15, 23, 42, 0.6); border: 2px solid rgba(255, 255, 255, 0.1); color: #fff; border-radius: 12px; box-sizing: border-box; font-family: 'Quicksand', sans-serif; font-size: 1.1rem; transition: all 0.3s ease; }
+        input[type="text"]:focus, textarea:focus { outline: none; border-color: var(--azul-brillante); box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); background: rgba(15, 23, 42, 0.9); }
         textarea { resize: vertical; min-height: 140px; line-height: 1.5; }
 
-        .btn {
-            background: var(--rojo-cepies);
-            color: var(--blanco);
-            border: none;
-            padding: 16px 28px;
-            font-family: 'Quicksand', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 700;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: block;
-            text-align: center;
-            width: 100%;
-            box-sizing: border-box;
-            box-shadow: 0 8px 20px rgba(234, 32, 39, 0.2);
-            margin-top: 15px;
-        }
+        .btn { background: var(--rojo-cepies); color: var(--blanco); border: none; padding: 16px 28px; font-family: 'Quicksand', sans-serif; font-size: 1.2rem; font-weight: 700; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; display: block; text-align: center; width: 100%; box-sizing: border-box; box-shadow: 0 8px 20px rgba(234, 32, 39, 0.2); margin-top: 15px; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(234, 32, 39, 0.4); }
+        .btn-blue { background: var(--azul-brillante); box-shadow: 0 8px 20px rgba(59, 130, 246, 0.2); }
+        .btn-blue:hover { box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4); }
+        .btn-volver { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255,255,255,0.3); margin-bottom: 15px; }
+        .btn-copiar { background: #475569; padding: 8px 15px; font-size: 1rem; border-radius: 8px; margin-top: 10px; box-shadow: none; width: auto; display: inline-block;}
+        .btn-copiar:hover { background: #64748b; transform: none; }
 
-        .btn:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 10px 25px rgba(234, 32, 39, 0.4);
-        }
-        
-        .btn-blue { 
-            background: var(--azul-brillante);
-            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.2);
-        }
-        
-        .btn-blue:hover { 
-            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
-        }
-
-        .btn-volver {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: #fff;
-            margin-bottom: 15px;
-        }
-
-        .btn-volver:hover { background: rgba(255, 255, 255, 0.2); }
-        
-        .claro-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-            margin: 2rem 0;
-        }
-
-        .claro-card {
-            background: rgba(15, 23, 42, 0.5);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 16px;
-            padding: 1.5rem 1rem;
-            width: 100%;
-            max-width: 230px;
-            text-align: center;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            transition: transform 0.3s;
-        }
-
-        .claro-card:hover { transform: translateY(-5px); background: rgba(15, 23, 42, 0.8); }
-
-        .letra-globo {
-            font-family: 'Fredoka One', cursive;
-            font-size: 4rem;
-            margin: 0 0 10px 0;
-            line-height: 1;
-            text-shadow: 
-                0px 3px 0px rgba(255,255,255,0.4),
-                0px 8px 10px rgba(0,0,0,0.5);
-        }
-        
-        .color-c { color: #ff4757; } 
-        .color-l { color: #2ed573; } 
-        .color-a { color: #1e90ff; } 
-        .color-r { color: #ffa502; } 
-        .color-o { color: #9b59b6; } 
-
-        .claro-titulo-card {
-            font-family: 'Pacifico', cursive;
-            font-size: 1.5rem;
-            color: #fff;
-            margin: 0 0 10px 0;
-        }
-
-        .claro-desc {
-            font-size: 0.95rem;
-            color: #cbd5e1;
-            margin: 0;
-            line-height: 1.4;
-        }
-        
+        .claro-grid { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin: 2rem 0; }
+        .claro-card { background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 1.5rem 1rem; width: 100%; max-width: 230px; text-align: center; transition: transform 0.3s; }
+        .letra-globo { font-family: 'Fredoka One', cursive; font-size: 4rem; margin: 0 0 10px 0; line-height: 1; text-shadow: 0px 3px 0px rgba(255,255,255,0.4), 0px 8px 10px rgba(0,0,0,0.5); }
+        .color-c { color: #ff4757; } .color-l { color: #2ed573; } .color-a { color: #1e90ff; } .color-r { color: #ffa502; } .color-o { color: #9b59b6; }
+        .claro-titulo-card { font-family: 'Pacifico', cursive; font-size: 1.5rem; margin: 0 0 10px 0; }
+        .claro-desc { font-size: 0.95rem; color: #cbd5e1; margin: 0; line-height: 1.4; }
         .claro-desc strong { color: #38bdf8; display: block; margin-bottom: 5px;}
 
-        .info-box {
-            background: rgba(255, 255, 255, 0.03);
-            border-left: 4px solid var(--azul-brillante);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            border-radius: 0 12px 12px 0;
-        }
-
+        .info-box { background: rgba(255, 255, 255, 0.03); border-left: 4px solid var(--azul-brillante); padding: 1.5rem; margin-bottom: 1.5rem; border-radius: 0 12px 12px 0; }
         .checklist { list-style: none; padding: 0; margin: 0; }
-        .checklist li {
-            padding: 10px 0 10px 30px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            position: relative;
-            color: #cbd5e1;
-            font-size: 1.1rem;
-            line-height: 1.4;
-        }
-        
-        .checklist li:before {
-            content: '✨';
-            color: #38bdf8;
-            font-weight: bold;
-            position: absolute;
-            left: 0;
-            font-size: 1.2rem;
-        }
+        .checklist li { padding: 10px 0 10px 30px; border-bottom: 1px solid rgba(255,255,255,0.05); position: relative; color: #cbd5e1; font-size: 1.1rem; line-height: 1.4; }
+        .checklist li:before { content: '✨'; color: #38bdf8; font-weight: bold; position: absolute; left: 0; font-size: 1.2rem; }
+        .hidden { display: none !important; }
+        .titulo-seccion { font-size: 2.2rem; margin-top: 0; margin-bottom: 1.5rem; text-align: center; }
+        .img-ejemplo-prompt { width: 100%; max-width: 250px; border-radius: 12px; border: 2px solid rgba(255,255,255,0.15); margin: 20px auto 10px; display: block; }
 
-        .hidden { display: none; }
-        .titulo-seccion { color: #fff; font-size: 2.2rem; margin-top: 0; margin-bottom: 1.5rem; text-align: center; }
+        /* Diseño 3 Columnas */
+        #seccion4 { max-width: 100%; background: transparent; border: none; box-shadow: none; padding: 0; }
+        .paso4-layout { display: flex; gap: 25px; justify-content: center; align-items: flex-start; flex-wrap: wrap; }
+        .col-lateral { flex: 1; min-width: 280px; max-width: 400px; background: rgba(30, 41, 59, 0.85); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 2rem; }
+        .col-central { flex: 2; min-width: 320px; max-width: 850px; background: rgba(30, 41, 59, 0.85); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 2.5rem; }
+        .prompt-ejemplo-item { background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); padding: 1.5rem; border-radius: 12px; margin-bottom: 25px; }
+        .prompt-ejemplo-item h4 { color: #fca5a5; margin: 0 0 15px 0; font-size: 1.3rem; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        .prompt-ejemplo-item p { margin: 12px 0; font-size: 0.95rem; color: #cbd5e1; }
+        .prompt-ejemplo-item strong { color: #38bdf8; display: inline-block; margin-right: 5px; }
 
-        /* DISEÑO 3 COLUMNAS (PASO 4) */
-        #seccion4 {
-            max-width: 100%;
-            background: transparent;
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
-            border: none;
-            box-shadow: none;
-            padding: 0;
-        }
-
-        .paso4-layout {
-            display: flex;
-            gap: 25px;
-            justify-content: center;
-            align-items: flex-start;
-            flex-wrap: wrap; 
-        }
-
-        .col-lateral {
-            flex: 1;
-            min-width: 280px;
-            max-width: 400px;
-            background: rgba(30, 41, 59, 0.85);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-
-        .col-central {
-            flex: 2;
-            min-width: 320px;
-            max-width: 850px;
-            background: rgba(30, 41, 59, 0.85);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 2.5rem;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-
-        .col-lateral h4, .prompt-ejemplo-item h4 {
-            color: #fca5a5;
-            margin: 0 0 15px 0;
-            font-size: 1.3rem;
-            font-family: 'Quicksand', sans-serif;
-            text-align: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 10px;
-        }
-
-        .col-lateral p, .prompt-ejemplo-item p {
-            margin: 12px 0;
-            font-size: 0.95rem;
-            color: #cbd5e1;
-            line-height: 1.5;
-            text-align: left;
-        }
-
-        .col-lateral strong, .prompt-ejemplo-item strong {
-            color: #38bdf8;
-            display: inline-block;
-            margin-right: 5px;
-        }
-
-        .prompt-ejemplo-item {
-            background: rgba(15, 23, 42, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 1.5rem;
-            border-radius: 12px;
-            margin-bottom: 25px;
-        }
-
-        /* Estilo para las imágenes de ejemplo (Usado en Paso 2 y Paso 4) */
-        .img-ejemplo-prompt {
-            width: 100%;
-            max-width: 250px;
-            border-radius: 12px;
-            border: 2px solid rgba(255,255,255,0.15);
-            margin: 20px auto 10px;
-            display: block;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-            transition: transform 0.3s ease;
-            background-color: rgba(255, 255, 255, 0.05);
-        }
-
-        .img-ejemplo-prompt:hover {
-            transform: scale(1.03);
-            border-color: rgba(255,255,255,0.3);
-        }
+        /* Estilos Autoevaluación */
+        .eval-q { margin-bottom: 2rem; background: rgba(15, 23, 42, 0.4); padding: 1.5rem; border-radius: 12px; }
+        .eval-q h4 { margin: 0 0 15px 0; color: #38bdf8; font-size: 1.2rem; }
+        .options-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .option-box { border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 15px; cursor: pointer; transition: 0.3s; background: rgba(255,255,255,0.02); }
+        .option-box:hover { background: rgba(255,255,255,0.1); }
+        .option-box.selected { border-color: #3b82f6; background: rgba(59, 130, 246, 0.2); box-shadow: 0 0 10px rgba(59, 130, 246, 0.4); }
+        .option-box strong { display: block; margin-bottom: 5px; font-size: 1.1rem; }
+        .option-box p { margin: 0; font-size: 0.9rem; color: #cbd5e1; }
+        @media(max-width: 768px) { .options-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -366,7 +89,6 @@
     </header>
 
     <div class="container">
-        
         <!-- PASO 1 -->
         <div id="seccion1" class="section active">
             <h2 class="titulo-seccion titulo-candice">Paso 1: Identificación</h2>
@@ -384,303 +106,318 @@
                 <label for="promptBasico">Si tuviera que pedirle a una Inteligencia Artificial que convierta su fotografía en un dibujo animado, ¿cómo redactaría su instrucción o "prompt" inicial?</label>
                 <textarea id="promptBasico" placeholder="Ejemplo rápido: 'Dibújame como niña animada'"></textarea>
             </div>
-            
             <div class="info-box" style="text-align: center; margin-bottom: 15px;">
                 <label style="color: #94a3b8; font-size: 1.1rem; font-weight: bold; margin-bottom: 5px; display: inline-block;">Ejemplo de lo que genera un prompt rápido y de pocas palabras:</label>
                 <div style="color: #cbd5e1; font-style: italic; margin-bottom: 15px;">"Dibújame como niña animada" 👇</div>
-                
-                <!-- Imagen 0 (Paso 2) -->
                 <img src="imagen0.png" alt="Ejemplo de resultado rápido" class="img-ejemplo-prompt" onerror="this.src='imagen0.jpg';">
             </div>
-
-            <!-- Botón de Descarga Paso 2 -->
             <button class="btn" onclick="prepararDescarga('promptBasico', 'Instrucción Inicial')">
-                Presione aquí para descargar la imagen y, por favor, envíela al grupo de WhatsApp 💬😃
+                Descargar imagen y enviar al grupo de WhatsApp 💬😃
             </button>
         </div>
 
         <!-- PASO 3 -->
         <div id="seccion3" class="section">
             <h2 class="titulo-seccion titulo-candice">Paso 3: El Método C.L.A.R.O.</h2>
-            <p style="color: #cbd5e1; text-align: center; margin-bottom: 2rem;">Analice la siguiente estructura para mejorar la precisión y calidad visual de sus instrucciones (prompts):</p>
-            
+            <p style="text-align: center; margin-bottom: 2rem;">Analice la siguiente estructura para mejorar la precisión y calidad visual de sus instrucciones (prompts):</p>
             <div class="claro-grid">
-                <div class="claro-card">
-                    <div class="letra-globo color-c">C</div>
-                    <div class="claro-titulo-card">Contexto</div>
-                    <p class="claro-desc"><strong>¿Qué comparto y para qué?</strong><br>Ej. Adjunto mi foto para presentarme en el diplomado.</p>
-                </div>
-                
-                <div class="claro-card">
-                    <div class="letra-globo color-l">L</div>
-                    <div class="claro-titulo-card">Labor</div>
-                    <p class="claro-desc"><strong>¿Qué debe hacer la IA?</strong><br>Ej. Transforma mi foto en un estilo cartoon dibujado a mano.</p>
-                </div>
-
-                <div class="claro-card">
-                    <div class="letra-globo color-a">A</div>
-                    <div class="claro-titulo-card">Audiencia</div>
-                    <p class="claro-desc"><strong>¿Quién lo verá?</strong><br>Ej. Mis compañeros de clase, quiero transmitir alegría.</p>
-                </div>
-
-                <div class="claro-card">
-                    <div class="letra-globo color-r">R</div>
-                    <div class="claro-titulo-card">Requisitos</div>
-                    <p class="claro-desc"><strong>¿Qué detalles mantengo?</strong><br>Ej. Conserva mi ropa, rasgos faciales y usa fondo alegre.</p>
-                </div>
-
-                <div class="claro-card">
-                    <div class="letra-globo color-o">O</div>
-                    <div class="claro-titulo-card">Output</div>
-                    <p class="claro-desc"><strong>¿Qué formato?</strong><br>Ej. Entrega una sola imagen cuadrada, sin texto.</p>
-                </div>
+                <div class="claro-card"><div class="letra-globo color-c">C</div><div class="claro-titulo-card">Contexto</div><p class="claro-desc"><strong>¿Qué comparto y para qué?</strong><br>Ej. Adjunto mi foto para presentarme.</p></div>
+                <div class="claro-card"><div class="letra-globo color-l">L</div><div class="claro-titulo-card">Labor</div><p class="claro-desc"><strong>¿Qué debe hacer la IA?</strong><br>Ej. Transforma mi foto en estilo cartoon.</p></div>
+                <div class="claro-card"><div class="letra-globo color-a">A</div><div class="claro-titulo-card">Audiencia</div><p class="claro-desc"><strong>¿Quién lo verá?</strong><br>Ej. Mis compañeros de clase.</p></div>
+                <div class="claro-card"><div class="letra-globo color-r">R</div><div class="claro-titulo-card">Requisitos</div><p class="claro-desc"><strong>¿Qué detalles mantengo?</strong><br>Ej. Conserva mi ropa y usa fondo alegre.</p></div>
+                <div class="claro-card"><div class="letra-globo color-o">O</div><div class="claro-titulo-card">Output</div><p class="claro-desc"><strong>¿Qué formato?</strong><br>Ej. Entrega una sola imagen cuadrada.</p></div>
             </div>
-            
             <button class="btn btn-blue" onclick="mostrarSeccion('seccion4')">Entendido, redactar mi instrucción especializada</button>
         </div>
 
-        <!-- PASO 4 (Diseño 3 Columnas) -->
+        <!-- PASO 4 (3 Columnas) -->
         <div id="seccion4" class="section">
             <h2 class="titulo-seccion titulo-candice" style="margin-bottom: 2rem; text-shadow: 0 4px 6px rgba(0,0,0,0.5);">Paso 4: Su Prompt Especializado</h2>
-            
             <div class="paso4-layout">
                 
-                <!-- COLUMNA IZQUIERDA: Ejemplo 1 -->
+                <!-- IZQUIERDA -->
                 <div class="col-lateral">
-                    <h4>🎨 Ejemplo 1: Anime Indie</h4>
-                    <p><strong>[C] CONTEXTO:</strong> Usa mi fotografía subida como única referencia. Quiero convertirla en una ilustración japonesa indie minimalista, manteniendo claramente mi identidad y apariencia.</p>
-                    <p><strong>[L] LABOR:</strong> Transforma la foto en un retrato estilo anime doodle japonés: cabeza grande y redondeada, cuerpo pequeño, ojos mínimos, boca muy sutil, líneas dibujadas a mano en azul marino, colores pastel apagados, sombreado plano y textura suave de papel.</p>
-                    <p><strong>[A] AUDIENCIA:</strong> La imagen será usada como retrato personal o foto de perfil. Debe transmitir calidez, ternura, calma y una estética acogedora y artística.</p>
-                    <p><strong>[R] REQUISITOS:</strong> Conserva fielmente el rostro, proporciones, peinado, expresión, pose, ropa, colores y accesorios originales. No conviertas a la persona en un personaje anime genérico. Usa un fondo simple terracota, beige o crema con bastante espacio vacío. Añade “[NAME]” en la esquina superior derecha como una firma pequeña, cursiva y natural.</p>
-                    <p><strong>[O] OUTPUT:</strong> Imagen cuadrada 1:1, una sola persona, composición limpia, ilustración 2D de alta calidad. Sin bordes, logos ni texto adicional aparte de la firma.</p>
-                    
-                    <!-- IMAGEN 1 PNG -->
-                    <img src="imagen1.png" alt="Ejemplo Anime Indie" class="img-ejemplo-prompt" onerror="this.src='imagen1.jpg';">
+                    <div class="prompt-ejemplo-item" id="textoEjemplo1">
+                        <h4>🎨 Ejemplo 1: Anime Indie</h4>
+                        <p><strong>[C] CONTEXTO:</strong> Usa mi fotografía subida como única referencia. Quiero convertirla en una ilustración japonesa indie minimalista, manteniendo claramente mi identidad y apariencia.</p>
+                        <p><strong>[L] LABOR:</strong> Transforma la foto en un retrato estilo anime doodle japonés: cabeza grande y redondeada, cuerpo pequeño, ojos mínimos, boca muy sutil, líneas dibujadas a mano en azul marino, colores pastel apagados, sombreado plano y textura suave de papel.</p>
+                        <p><strong>[A] AUDIENCIA:</strong> La imagen será usada como retrato personal o foto de perfil. Debe transmitir calidez, ternura, calma y una estética acogedora y artística.</p>
+                        <p><strong>[R] REQUISITOS:</strong> Conserva fielmente el rostro, proporciones, peinado, expresión, pose, ropa, colores y accesorios originales. No conviertas a la persona en un personaje anime genérico. Usa un fondo simple terracota, beige o crema con bastante espacio vacío. Añade “[NAME]” en la esquina superior derecha como una firma pequeña, cursiva y natural.</p>
+                        <p><strong>[O] OUTPUT:</strong> Imagen cuadrada 1:1, una sola persona, composición limpia, ilustración 2D de alta calidad. Sin bordes, logos ni texto adicional aparte de la firma.</p>
+                    </div>
+                    <button class="btn btn-copiar" onclick="copiarTexto('textoEjemplo1')">Copiar Ejemplo 1 📋</button>
+                    <img src="imagen1.png" alt="Ejemplo 1" class="img-ejemplo-prompt" onerror="this.src='imagen1.jpg';">
                 </div>
 
-                <!-- COLUMNA CENTRAL: Ejemplo 2 y Formulario -->
+                <!-- CENTRO -->
                 <div class="col-central">
-                    <div class="prompt-ejemplo-item">
+                    <div class="prompt-ejemplo-item" id="textoEjemplo2">
                         <h4>🎨 Ejemplo 2: Doodle Kawaii</h4>
                         <p><strong>[C] CONTEXTO:</strong> Usa la imagen subida como única referencia. Quiero transformar al sujeto en una ilustración doodle kawaii hecha a mano, inspirada en dibujos simples coreanos y japoneses de redes sociales.</p>
                         <p><strong>[L] LABOR:</strong> Convierte la foto en un dibujo tierno y espontáneo, con líneas negras gruesas e irregulares, ojos mínimos, rasgos simples, formas redondeadas, proporciones ligeramente adorables, rubor rosado, colores pastel suaves y textura visible de lápiz, crayón o marcador.</p>
                         <p><strong>[A] AUDIENCIA:</strong> La imagen será usada como ilustración personal o para redes sociales. Debe sentirse cálida, divertida, inocente, encantadora y emocionalmente expresiva.</p>
                         <p><strong>[R] REQUISITOS:</strong> Conserva fielmente la identidad y rasgos reconocibles del sujeto. Si es una persona, respeta rostro, peinado, barba, cuerpo, ropa y colores. Si es un animal, conserva raza, pelaje, color, hocico, ojos y orejas. Mantén la pose y emoción originales. Fondo blanco o muy limpio, con bastante espacio vacío. Evita estilo anime, manga, 3D, hiperrealismo, acabado vectorial perfecto, exceso de detalle, fondos complejos o cambios de identidad.</p>
                         <p><strong>[O] OUTPUT:</strong> Ilustración 2D limpia, equilibrada y de apariencia realmente dibujada a mano, como un doodle viral hecho rápidamente en un cuaderno.</p>
-                        
-                        <!-- IMAGEN 2 PNG -->
-                        <img src="imagen2.png" alt="Ejemplo Doodle Kawaii" class="img-ejemplo-prompt" onerror="this.src='imagen2.jpg';">
                     </div>
+                    <div style="text-align: center;"><button class="btn btn-copiar" onclick="copiarTexto('textoEjemplo2')">Copiar Ejemplo 2 📋</button></div>
+                    <img src="imagen2.png" alt="Ejemplo 2" class="img-ejemplo-prompt" onerror="this.src='imagen2.jpg';">
 
-                    <div class="info-box">
-                        <strong style="color: #fff; display: block; margin-bottom: 10px; font-size: 1.2rem;">💡 Siga estas directrices para el suyo:</strong>
-                        <ul class="checklist">
-                            <li><strong>[C] Contexto:</strong> Indique claramente que es su fotografía y el propósito.</li>
-                            <li><strong>[L] Labor:</strong> Especifique la acción y el estilo visual exacto.</li>
-                            <li><strong>[A] Audiencia:</strong> Mencione quién verá la imagen y qué emoción desea transmitir.</li>
-                            <li><strong>[R] Requisitos:</strong> Detalle todo lo que no quiere perder y lo que desea añadir.</li>
-                            <li><strong>[O] Output:</strong> Defina el formato exacto de entrega (ej. imagen cuadrada sin texto).</li>
-                        </ul>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="promptMejorado">Redacte su prompt especializado uniendo todos estos detalles:</label>
-                        <textarea id="promptMejorado" placeholder="Escriba aquí aplicando su propio estilo a cada punto..."></textarea>
+                    <div class="info-box" style="margin-top:20px;">
+                        <strong style="color: #fff; display: block; margin-bottom: 10px;">💡 Redacte su prompt especializado:</strong>
+                        <textarea id="promptMejorado" placeholder="Escriba o pegue aquí su prompt mejorado..."></textarea>
                     </div>
                     
-                    <button class="btn btn-volver" onclick="mostrarSeccion('seccion3')">
-                        👈 Volver al cuadro C.L.A.R.O.
-                    </button>
-
-                    <!-- Botón de Descarga Paso 4 -->
+                    <button class="btn btn-volver" onclick="mostrarSeccion('seccion3')">👈 Volver a C.L.A.R.O.</button>
                     <button class="btn" onclick="prepararDescarga('promptMejorado', 'Instrucción Especializada')">
-                        Presione aquí para descargar su tarjeta final y, por favor, envíela al grupo de WhatsApp 💬😃
+                        Descargar tarjeta y enviar al grupo de WhatsApp 💬😃
                     </button>
                     
-                    <div id="mensajeFinal" class="hidden" style="text-align: center; color: #38bdf8; font-size: 1.3rem; font-weight: bold; margin-top: 1.5rem;">
-                        ¡Excelente trabajo! Busque la imagen descargada en su dispositivo y compártala en el grupo.
-                    </div>
+                    <button id="btnIrAutoEval" class="btn btn-blue hidden" style="margin-top:25px;" onclick="mostrarSeccion('seccion5')">
+                        Ir a mi Autoevaluación Final 👉
+                    </button>
                 </div>
 
-                <!-- COLUMNA DERECHA: Ejemplo 3 -->
+                <!-- DERECHA -->
                 <div class="col-lateral">
-                    <h4>🎨 Ejemplo 3: Street Casual</h4>
-                    <p><strong>[C] CONTEXTO:</strong> Usa la imagen subida como referencia. Quiero transformarla en una ilustración japonesa simple, suelta y hecha a mano, con un estilo cálido, minimalista y con aire street casual.</p>
-                    <p><strong>[L] LABOR:</strong> Convierte a la persona en un dibujo de cuerpo completo con líneas negras o marrón oscuro, ligeramente irregulares y naturales. Usa pocos colores, aplicados en capas planas, sin degradados ni brillo. Simplifica el rostro con ojos, nariz y boca muy pequeños, y dibuja el cabello con pocas líneas. La pose debe ser relajada, con ambas manos haciendo un gesto de paz, los codos ligeramente doblados, las manos a distinta altura y el cuerpo levemente inclinado.</p>
-                    <p><strong>[A] AUDIENCIA:</strong> La imagen será usada como foto de perfil o ilustración personal. Debe transmitir una sensación relajada, simpática, sencilla y estilosa.</p>
-                    <p><strong>[R] REQUISITOS:</strong> Mantén una estética de ilustración manual, simple y poco recargada. La ropa debe sentirse como street casual suelto y natural, con un aire relajado y moderno. Muestra a la persona completa, incluyendo ambas manos. Usa fondo blanco y deja bastante espacio vacío alrededor. Evita exceso de detalle, sombras complejas, degradados, brillo o acabado demasiado pulido.</p>
-                    <p><strong>[O] OUTPUT:</strong> Imagen cuadrada tipo foto de perfil, con la figura completa centrada y bien equilibrada dentro de un encuadre circular, dejando márgenes amplios y una composición limpia.</p>
-                    
-                    <!-- IMAGEN 3 PNG -->
-                    <img src="imagen3.png" alt="Ejemplo Street Casual" class="img-ejemplo-prompt" onerror="this.src='imagen3.jpg';">
+                    <div class="prompt-ejemplo-item" id="textoEjemplo3">
+                        <h4>🎨 Ejemplo 3: Street Casual</h4>
+                        <p><strong>[C] CONTEXTO:</strong> Usa la imagen subida como referencia. Quiero transformarla en una ilustración japonesa simple, suelta y hecha a mano, con un estilo cálido, minimalista y con aire street casual.</p>
+                        <p><strong>[L] LABOR:</strong> Convierte a la persona en un dibujo de cuerpo completo con líneas negras o marrón oscuro, ligeramente irregulares y naturales. Usa pocos colores, aplicados en capas planas, sin degradados ni brillo. Simplifica el rostro con ojos, nariz y boca muy pequeños, y dibuja el cabello con pocas líneas. La pose debe ser relajada, con ambas manos haciendo un gesto de paz, los codos ligeramente doblados, las manos a distinta altura y el cuerpo levemente inclinado.</p>
+                        <p><strong>[A] AUDIENCIA:</strong> La imagen será usada como foto de perfil o ilustración personal. Debe transmitir una sensación relajada, simpática, sencilla y estilosa.</p>
+                        <p><strong>[R] REQUISITOS:</strong> Mantén una estética de ilustración manual, simple y poco recargada. La ropa debe sentirse como street casual suelto y natural, con un aire relajado y moderno. Muestra a la persona completa, incluyendo ambas manos. Usa fondo blanco y deja bastante espacio vacío alrededor. Evita exceso de detalle, sombras complejas, degradados, brillo o acabado demasiado pulido.</p>
+                        <p><strong>[O] OUTPUT:</strong> Imagen cuadrada tipo foto de perfil, con la figura completa centrada y bien equilibrada dentro de un encuadre circular, dejando márgenes amplios y una composición limpia.</p>
+                    </div>
+                    <button class="btn btn-copiar" onclick="copiarTexto('textoEjemplo3')">Copiar Ejemplo 3 📋</button>
+                    <img src="imagen3.png" alt="Ejemplo 3" class="img-ejemplo-prompt" onerror="this.src='imagen3.jpg';">
                 </div>
 
             </div>
         </div>
 
+        <!-- PASO 5 (AUTOEVALUACIÓN) -->
+        <div id="seccion5" class="section">
+            <h2 class="titulo-seccion titulo-candice">Mi autoevaluación C.L.A.R.O.</h2>
+            <p style="text-align: center; color:#cbd5e1;">Reviso mi prompt, reconozco mi avance y decido qué mejorar.</p>
+            
+            <div class="eval-q">
+                <h4>01 Incluí las cinco partes de CLARO</h4>
+                <div class="options-grid" id="q1">
+                    <div class="option-box" onclick="seleccionarOpcion('q1', 2)"><strong>2 · Lo logré</strong><p>Las cinco partes aportan información útil.</p></div>
+                    <div class="option-box" onclick="seleccionarOpcion('q1', 1)"><strong>1 · En proceso</strong><p>Incluí tres o cuatro partes útiles.</p></div>
+                    <div class="option-box" onclick="seleccionarOpcion('q1', 0)"><strong>0 · Necesito apoyo</strong><p>Incluí dos partes o menos.</p></div>
+                </div>
+            </div>
+
+            <div class="eval-q">
+                <h4>02 Escribí indicaciones precisas y coherentes</h4>
+                <div class="options-grid" id="q2">
+                    <div class="option-box" onclick="seleccionarOpcion('q2', 2)"><strong>2 · Lo logré</strong><p>Definí los aspectos sin contradicciones.</p></div>
+                    <div class="option-box" onclick="seleccionarOpcion('q2', 1)"><strong>1 · En proceso</strong><p>Me falta un aspecto o hay contradicción.</p></div>
+                    <div class="option-box" onclick="seleccionarOpcion('q2', 0)"><strong>0 · Necesito apoyo</strong><p>No concreto el resultado o hay varias contradicciones.</p></div>
+                </div>
+            </div>
+
+            <div class="eval-q">
+                <h4>03 Puedo mostrar y explicar mi mejora</h4>
+                <div class="options-grid" id="q3">
+                    <div class="option-box" onclick="seleccionarOpcion('q3', 2)"><strong>2 · Lo logré</strong><p>Tengo ambas versiones y explico mejora.</p></div>
+                    <div class="option-box" onclick="seleccionarOpcion('q3', 1)"><strong>1 · En proceso</strong><p>Tengo ambas, pero debo explicar mejor.</p></div>
+                    <div class="option-box" onclick="seleccionarOpcion('q3', 0)"><strong>0 · Necesito apoyo</strong><p>No puedo mostrar ni explicar revisión.</p></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Mi reflexión (Completa: "Ahora precisé... para..." o "Todavía necesito mejorar...")</label>
+                <input type="text" id="reflexionTexto" maxlength="220" placeholder="Ej. Precisé el fondo para evitar contradicciones.">
+            </div>
+
+            <button class="btn btn-blue" onclick="generarTarjetaAutoEval()">Ver y Descargar mi Autoevaluación 📥</button>
+            <p style="text-align: center; color: #64748b; font-size: 0.9rem; margin-top: 15px;">Tus respuestas son privadas y solo se usarán para generar tu tarjeta local.</p>
+        </div>
+
     </div>
 
+    <!-- SCRIPT PRINCIPAL Y FIREBASE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        // 🔴🔴🔴 PEGUE AQUÍ SU FIREBASE CONFIG (SOLO REEMPLACE DONDE DICE PEGAR_AQUI) 🔴🔴🔴
+        const firebaseConfig = {
+  apiKey: "AIzaSyA-bFIpc8iRrpmxKh8ih6spxQVytBmFw3I",
+  authDomain: "cepies-claro.firebaseapp.com",
+  projectId: "cepies-claro",
+  storageBucket: "cepies-claro.firebasestorage.app",
+  messagingSenderId: "448149004343",
+  appId: "1:448149004343:web:038ff270958e703e7f9fb2",
+  measurementId: "G-RDYHRK9LDT"
+};
+        // 🔴🔴🔴 FIN DEL CONFIG 🔴🔴🔴
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Exponer función de envío al entorno global
+        window.enviarPromptFirebase = async function(nombre, tipo, prompt) {
+            try {
+                await addDoc(collection(db, "prompts"), {
+                    nombre: nombre,
+                    tipo: tipo,
+                    prompt: prompt,
+                    timestamp: new Date()
+                });
+                console.log("Enviado a Firebase");
+            } catch (e) {
+                console.error("Error al enviar", e);
+            }
+        };
+    </script>
+
     <script>
-        // Cargar logo limpiamente
         const logoImg = new Image();
         logoImg.crossOrigin = "anonymous";
         logoImg.src = "logo-cepies.jpg";
 
-        function mostrarSeccion(id) {
+        window.copiarTexto = function(idContenedor) {
+            let contenedor = document.getElementById(idContenedor);
+            let textoLimpio = "";
+            let parrafos = contenedor.getElementsByTagName('p');
+            for(let i=0; i<parrafos.length; i++){
+                textoLimpio += parrafos[i].innerText + "\n\n";
+            }
+            navigator.clipboard.writeText(textoLimpio.trim()).then(function() {
+                alert("¡Prompt copiado! Puedes pegarlo en ChatGPT.");
+            });
+        };
+
+        window.mostrarSeccion = function(id) {
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function validarPaso1() {
-            const nombre = document.getElementById('nombres').value.trim();
-            if(!nombre) {
-                alert("Por favor, escriba su nombre y apellido para continuar.");
-                return;
-            }
+        window.validarPaso1 = function() {
+            if(!document.getElementById('nombres').value.trim()) { alert("Escriba su nombre."); return; }
             mostrarSeccion('seccion2');
         }
 
-        function dibujarRectanguloRedondeado(ctx, x, y, ancho, alto, radio) {
-            ctx.beginPath();
-            ctx.moveTo(x + radio, y);
-            ctx.lineTo(x + ancho - radio, y);
-            ctx.quadraticCurveTo(x + ancho, y, x + ancho, y + radio);
-            ctx.lineTo(x + ancho, y + alto - radio);
-            ctx.quadraticCurveTo(x + ancho, y + alto, x + ancho - radio, y + alto);
-            ctx.lineTo(x + radio, y + alto);
-            ctx.quadraticCurveTo(x, y + alto, x, y + alto - radio);
-            ctx.lineTo(x, y + radio);
-            ctx.quadraticCurveTo(x, y, x + radio, y);
-            ctx.closePath();
-            ctx.fill();
-            ctx.stroke();
-        }
-
-        function prepararDescarga(textareaId, tipo) {
+        window.prepararDescarga = function(textareaId, tipo) {
             const nombre = document.getElementById('nombres').value.trim();
             const texto = document.getElementById(textareaId).value.trim();
-
-            if(!texto) {
-                alert("Por favor, redacte su texto en el recuadro antes de continuar.");
-                return;
+            if(!texto) { alert("Escriba su prompt primero."); return; }
+            
+            if(window.enviarPromptFirebase) {
+                window.enviarPromptFirebase(nombre, tipo, texto);
             }
 
-            const logoUsar = (logoImg.complete && logoImg.naturalWidth > 0) ? logoImg : null;
-            generarCanvas(textareaId, tipo, nombre, texto, logoUsar);
+            generarCanvas(textareaId, tipo, nombre, texto, (logoImg.complete && logoImg.naturalWidth > 0) ? logoImg : null);
+        }
+
+        function dibujarRectanguloRedondeado(ctx, x, y, ancho, alto, radio) {
+            ctx.beginPath(); ctx.moveTo(x + radio, y); ctx.lineTo(x + ancho - radio, y); ctx.quadraticCurveTo(x + ancho, y, x + ancho, y + radio); ctx.lineTo(x + ancho, y + alto - radio); ctx.quadraticCurveTo(x + ancho, y + alto, x + ancho - radio, y + alto); ctx.lineTo(x + radio, y + alto); ctx.quadraticCurveTo(x, y + alto, x, y + alto - radio); ctx.lineTo(x, y + radio); ctx.quadraticCurveTo(x, y, x + radio, y); ctx.closePath(); ctx.fill(); ctx.stroke();
         }
 
         function generarCanvas(textareaId, tipo, nombre, texto, logo) {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
-            
-            const anchoCanvas = 900;
-            const margenExterior = 40;
-            const margenInterior = 40;
-            const anchoTarjeta = anchoCanvas - (margenExterior * 2);
-            const maxWidthTexto = anchoTarjeta - (margenInterior * 2);
+            const anchoCanvas = 900, margenExterior = 40, margenInterior = 40;
+            const anchoTarjeta = anchoCanvas - (margenExterior * 2), maxWidthTexto = anchoTarjeta - (margenInterior * 2);
             const lineHeight = 38; 
             
             ctx.font = "24px 'Quicksand', sans-serif";
             const palabras = texto.split(' ');
-            let lineas = [];
-            let lineaActual = '';
+            let lineas = [], lineaActual = '';
 
             for(let n = 0; n < palabras.length; n++) {
                 let testLinea = lineaActual + palabras[n] + ' ';
-                let metrica = ctx.measureText(testLinea);
-                if (metrica.width > maxWidthTexto && n > 0) {
-                    lineas.push(lineaActual);
-                    lineaActual = palabras[n] + ' ';
-                } else {
-                    lineaActual = testLinea;
-                }
+                if (ctx.measureText(testLinea).width > maxWidthTexto && n > 0) { lineas.push(lineaActual); lineaActual = palabras[n] + ' '; } 
+                else { lineaActual = testLinea; }
             }
             lineas.push(lineaActual);
 
-            const altoEncabezado = 180;
-            const altoTexto = lineas.length * lineHeight;
-            const altoPieDePagina = 80;
-            const altoTarjeta = altoEncabezado + altoTexto + altoPieDePagina;
-            const altoCanvas = altoTarjeta + (margenExterior * 2);
+            const altoCanvas = Math.max(180 + (lineas.length * lineHeight) + 80 + (margenExterior * 2), 400);
+            canvas.width = anchoCanvas; canvas.height = altoCanvas;
 
-            canvas.width = anchoCanvas;
-            canvas.height = Math.max(altoCanvas, 400);
+            const gr = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gr.addColorStop(0, "#0f172a"); gr.addColorStop(1, "#172554");
+            ctx.fillStyle = gr; ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            const gradienteFondo = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-            gradienteFondo.addColorStop(0, "#0f172a");
-            gradienteFondo.addColorStop(1, "#172554");
-            ctx.fillStyle = gradienteFondo;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.fillStyle = "#1e293b"; 
-            ctx.strokeStyle = "#3b82f6"; 
-            ctx.lineWidth = 3;
-            dibujarRectanguloRedondeado(ctx, margenExterior, margenExterior, anchoTarjeta, altoTarjeta, 20);
+            ctx.fillStyle = "#1e293b"; ctx.strokeStyle = "#3b82f6"; ctx.lineWidth = 3;
+            dibujarRectanguloRedondeado(ctx, margenExterior, margenExterior, anchoTarjeta, altoCanvas-(margenExterior*2), 20);
 
             if(logo) {
-                const logoSize = 100;
-                const logoX = canvas.width - margenExterior - margenInterior - logoSize + 10;
-                const logoY = margenExterior + margenInterior - 10;
-                
-                ctx.save();
-                ctx.beginPath();
-                ctx.arc(logoX + logoSize/2, logoY + logoSize/2, logoSize/2, 0, Math.PI * 2, true);
-                ctx.closePath();
-                ctx.clip();
-                ctx.drawImage(logo, logoX, logoY, logoSize, logoSize);
-                ctx.restore();
+                const logoSize = 100, logoX = canvas.width - margenExterior - margenInterior - logoSize + 10, logoY = margenExterior + margenInterior - 10;
+                ctx.save(); ctx.beginPath(); ctx.arc(logoX + logoSize/2, logoY + logoSize/2, logoSize/2, 0, Math.PI * 2, true); ctx.closePath(); ctx.clip(); ctx.drawImage(logo, logoX, logoY, logoSize, logoSize); ctx.restore();
             }
 
             const startX = margenExterior + margenInterior;
             let currentY = margenExterior + margenInterior + 20;
 
-            ctx.fillStyle = "#EA2027"; 
-            ctx.font = "400 38px 'Pacifico', cursive";
-            ctx.fillText(nombre, startX, currentY);
+            ctx.fillStyle = "#EA2027"; ctx.font = "400 38px 'Pacifico', cursive"; ctx.fillText(nombre, startX, currentY);
+            currentY += 40; ctx.fillStyle = "#cbd5e1"; ctx.font = "bold 22px 'Quicksand', sans-serif"; ctx.fillText(tipo.toUpperCase(), startX, currentY);
+            currentY += 30; ctx.beginPath(); ctx.moveTo(startX, currentY); ctx.lineTo(canvas.width - margenExterior - margenInterior, currentY); ctx.strokeStyle = "rgba(255,255,255,0.1)"; ctx.lineWidth = 2; ctx.stroke();
+            currentY += 45; ctx.fillStyle = "#f8fafc"; ctx.font = "24px 'Quicksand', sans-serif";
             
-            currentY += 40;
+            for(let i = 0; i < lineas.length; i++) { ctx.fillText(lineas[i], startX, currentY); currentY += lineHeight; }
+            
+            currentY += 20; ctx.fillStyle = "#64748b"; ctx.font = "italic 18px 'Quicksand', sans-serif"; ctx.fillText("Módulo 3: Evaluación de Aprendizaje • Post Grado CEPIES", startX, currentY);
 
-            ctx.fillStyle = "#cbd5e1";
-            ctx.font = "bold 22px 'Quicksand', sans-serif";
-            ctx.fillText(tipo.toUpperCase(), startX, currentY);
+            const link = document.createElement('a'); link.download = tipo.replace(/ /g,"_") + "_" + nombre.replace(/ /g,"_") + ".jpg"; link.href = canvas.toDataURL("image/jpeg"); link.click();
 
-            currentY += 30;
-
-            ctx.beginPath();
-            ctx.moveTo(startX, currentY);
-            ctx.lineTo(canvas.width - margenExterior - margenInterior, currentY);
-            ctx.strokeStyle = "rgba(255,255,255,0.1)";
-            ctx.lineWidth = 2;
-            ctx.stroke();
-
-            currentY += 45;
-
-            ctx.fillStyle = "#f8fafc";
-            ctx.font = "24px 'Quicksand', sans-serif";
-            for(let i = 0; i < lineas.length; i++) {
-                ctx.fillText(lineas[i], startX, currentY);
-                currentY += lineHeight;
-            }
-
-            currentY += 20;
-            ctx.fillStyle = "#64748b";
-            ctx.font = "italic 18px 'Quicksand', sans-serif";
-            ctx.fillText("Módulo 3: Evaluación de Aprendizaje • Post Grado CEPIES", startX, currentY);
-
-            // Descargar imagen limpia
-            const enlaceDescarga = document.createElement('a');
-            enlaceDescarga.download = tipo.replace(/ /g,"_") + "_" + nombre.replace(/ /g,"_") + ".jpg";
-            enlaceDescarga.href = canvas.toDataURL("image/jpeg");
-            enlaceDescarga.click();
-
-            // Avanzar de paso
-            if(textareaId === 'promptBasico') {
-                setTimeout(() => { mostrarSeccion('seccion3'); }, 1000);
-            } else {
-                document.getElementById('mensajeFinal').classList.remove('hidden');
-            }
+            if(textareaId === 'promptBasico') { setTimeout(() => { mostrarSeccion('seccion3'); }, 1000); } 
+            else { document.getElementById('btnIrAutoEval').classList.remove('hidden'); }
         }
+
+        /* Lógica Paso 5: Autoevaluación */
+        let puntajes = { q1: -1, q2: -1, q3: -1 };
+        
+        window.seleccionarOpcion = function(grupo, valor) {
+            puntajes[grupo] = valor;
+            const opciones = document.getElementById(grupo).getElementsByClassName('option-box');
+            for(let i=0; i<opciones.length; i++){ opciones[i].classList.remove('selected'); }
+            event.currentTarget.classList.add('selected');
+        };
+
+        window.generarTarjetaAutoEval = function() {
+            if(puntajes.q1 === -1 || puntajes.q2 === -1 || puntajes.q3 === -1) { alert("Por favor, seleccione una opción para cada pregunta."); return; }
+            
+            const total = puntajes.q1 + puntajes.q2 + puntajes.q3;
+            const reflexion = document.getElementById('reflexionTexto').value.trim() || "Sin reflexión escrita.";
+            const nombre = document.getElementById('nombres').value.trim();
+            
+            let evaluacionTexto = "Según mis respuestas, necesito ajustar mi instrucción.";
+            if(total >= 5) evaluacionTexto = "Según mis respuestas, alcancé el logro esperado.";
+            else if(total >= 3) evaluacionTexto = "Según mis respuestas, estoy en proceso de lograrlo.";
+
+            const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
+            canvas.width = 800; canvas.height = 550;
+            
+            ctx.fillStyle = "#0f172a"; ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.fillStyle = "#1e293b"; ctx.strokeStyle = "#3b82f6"; ctx.lineWidth = 3;
+            dibujarRectanguloRedondeado(ctx, 30, 30, 740, 490, 15);
+
+            let cy = 80; const cx = 60;
+            ctx.fillStyle = "#f8fafc"; ctx.font = "bold 20px 'Quicksand', sans-serif"; ctx.fillText("AUTOEVALUACIÓN C.L.A.R.O.", cx, cy);
+            cy += 40; ctx.fillStyle = "#fca5a5"; ctx.font = "bold 28px 'Quicksand', sans-serif"; ctx.fillText("Prueba de la tarjeta", cx, cy);
+            cy += 45; ctx.fillStyle = "#38bdf8"; ctx.font = "bold 24px 'Quicksand', sans-serif"; ctx.fillText(`Mi valoración: ${total} / 6`, cx, cy);
+            cy += 35; ctx.fillStyle = "#f8fafc"; ctx.font = "20px 'Quicksand', sans-serif"; ctx.fillText(evaluacionTexto, cx, cy);
+            
+            cy += 30; ctx.fillStyle = "#cbd5e1"; ctx.font = "16px 'Quicksand', sans-serif"; 
+            ctx.fillText(`CLARO: ${puntajes.q1}/2 · Precisión: ${puntajes.q2}/2 · Mejora: ${puntajes.q3}/2`, cx, cy);
+
+            cy += 45; ctx.fillStyle = "#38bdf8"; ctx.font = "bold 16px 'Quicksand', sans-serif"; ctx.fillText("MI REFLEXIÓN", cx, cy);
+            cy += 25; ctx.fillStyle = "#f8fafc"; ctx.font = "18px 'Quicksand', sans-serif"; ctx.fillText(reflexion, cx, cy);
+
+            cy += 50; ctx.fillStyle = "#38bdf8"; ctx.font = "bold 16px 'Quicksand', sans-serif"; ctx.fillText("MI SIGUIENTE PASO", cx, cy);
+            cy += 25; ctx.fillStyle = "#f8fafc"; ctx.font = "18px 'Quicksand', sans-serif"; ctx.fillText("Revisa el estilo, detalles y formato. Resuelve contradicciones.", cx, cy);
+            
+            cy += 50; ctx.fillStyle = "#94a3b8"; ctx.font = "14px 'Quicksand', sans-serif"; 
+            ctx.fillText("Autoevaluación personal. Contrastar con el prompt y valoración docente.", cx, cy);
+            cy += 20; ctx.fillText(`${nombre} • Módulo 3 - CEPIES`, cx, cy);
+
+            const link = document.createElement('a'); link.download = `Autoevaluacion_${nombre.replace(/ /g,"_")}.jpg`; link.href = canvas.toDataURL("image/jpeg"); link.click();
+            alert("¡Su tarjeta de autoevaluación se ha descargado!");
+        };
     </script>
 </body>
 </html>
