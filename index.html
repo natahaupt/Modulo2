@@ -83,8 +83,15 @@
         .cerrar-modal:hover { color: #fff; }
         #imagenGenerada { width: 100%; border-radius: 12px; margin-top: 15px; border: 2px solid rgba(255,255,255,0.1); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
 
-        /* Estilo para la foto final */
-        .foto-despedida { max-width: 220px; border-radius: 50%; border: 5px solid #38bdf8; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin: 25px 0; object-fit: cover; }
+        /* ESTILO LIMPIO PARA LA FOTO FINAL (SIN RECORTES NI BORDES) */
+        .foto-despedida { 
+            max-width: 260px; 
+            margin: 15px auto 25px auto; 
+            display: block; 
+            object-fit: contain; 
+            border: none;
+            background: transparent;
+        }
     </style>
 </head>
 <body>
@@ -181,13 +188,11 @@
                         <textarea id="promptMejorado" placeholder="Escriba o pegue aquí su prompt estructurado..." oninput="guardarDatosLocales()"></textarea>
                     </div>
                     
-                    <!-- Botones que se ocultarán al finalizar el paso -->
                     <button id="btnRepasarMetodologia" class="btn btn-volver" onclick="mostrarSeccion('seccion3')">👈 Repasar la Metodología</button>
                     <button id="btnGenerarProgreso" class="btn" onclick="prepararDescarga('promptMejorado', 'Instrucción Especializada')">
                         Generar mi progreso para compartirlo en el grupo del Diplomado! 🤝🚀
                     </button>
                     
-                    <!-- Botón oculto por defecto que aparecerá si recargan -->
                     <button id="btnIrAutoEval" class="btn btn-blue hidden" style="margin-top:25px;" onclick="mostrarSeccion('seccion5')">
                         Ir a mi Autoevaluación Final 👉
                     </button>
@@ -258,8 +263,8 @@
                 
                 <h2 class="titulo-seccion titulo-candice" style="color: #4ade80; text-shadow: 0 2px 5px rgba(0,0,0,0.5);">¡Gracias por su tiempo! 🎉</h2>
                 
-                <!-- 🔴 IMAGEN FINAL CON EL NOMBRE CORRECTO 🔴 -->
-                <img src="imagenultima.png" alt="Ing. Mariela Limachi" class="foto-despedida" onerror="this.src='logo-cepies.jpg';"> 
+                <!-- SU FOTO PNG LIMPÍA Y SIN BORDES -->
+                <img src="imagenultima.png" alt="Ing. Mariela Limachi" class="foto-despedida"> 
                 
                 <p style="font-size: 1.25rem; color: #e2e8f0; margin-bottom: 15px; padding: 0 15px;">Ha sido un verdadero honor compartir este espacio de aprendizaje y construcción de conocimientos con ustedes.</p>
                 <p style="font-size: 1.5rem; color: #38bdf8; font-weight: bold; margin-bottom: 35px; text-shadow: 0 2px 4px rgba(0,0,0,0.4);">¡Les deseo un feliz y exitoso fin de módulo!</p>
