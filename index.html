@@ -30,10 +30,7 @@
         label { display: block; font-weight: 700; margin-bottom: 0.8rem; color: #e2e8f0; font-size: 1.2rem; }
         input[type="text"], textarea { width: 100%; padding: 16px; background: rgba(15, 23, 42, 0.6); border: 2px solid rgba(255, 255, 255, 0.1); color: #fff; border-radius: 12px; box-sizing: border-box; font-family: 'Quicksand', sans-serif; font-size: 1.1rem; transition: all 0.3s ease; }
         input[type="text"]:focus, textarea:focus { outline: none; border-color: var(--azul-brillante); box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); background: rgba(15, 23, 42, 0.9); }
-        
-        /* Estilo para cajas bloqueadas */
         input[type="text"]:disabled, textarea:disabled { background: rgba(255, 255, 255, 0.05); color: #94a3b8; cursor: not-allowed; border-color: rgba(255, 255, 255, 0.05); }
-        
         textarea { resize: vertical; min-height: 140px; line-height: 1.5; }
 
         .btn { background: var(--rojo-cepies); color: var(--blanco); border: none; padding: 16px 28px; font-family: 'Quicksand', sans-serif; font-size: 1.2rem; font-weight: 700; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; display: block; text-align: center; width: 100%; box-sizing: border-box; box-shadow: 0 8px 20px rgba(234, 32, 39, 0.2); margin-top: 15px; }
@@ -85,6 +82,9 @@
         .cerrar-modal { color: #cbd5e1; position: absolute; right: 20px; top: 15px; font-size: 32px; font-weight: bold; cursor: pointer; line-height: 1; }
         .cerrar-modal:hover { color: #fff; }
         #imagenGenerada { width: 100%; border-radius: 12px; margin-top: 15px; border: 2px solid rgba(255,255,255,0.1); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+
+        /* Estilo para la foto final */
+        .foto-despedida { max-width: 220px; border-radius: 50%; border: 5px solid #38bdf8; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin: 25px 0; object-fit: cover; }
     </style>
 </head>
 <body>
@@ -249,9 +249,28 @@
 
             <button class="btn btn-blue" onclick="generarTarjetaAutoEval()">Ver y Descargar mi Autoevaluación 📥</button>
             <p style="text-align: center; color: #64748b; font-size: 0.9rem; margin-top: 15px;">Tus respuestas son privadas y solo se usarán para generar tu tarjeta local.</p>
-            
-            <div style="border-top: 1px solid rgba(255,255,255,0.1); margin-top: 30px; padding-top: 20px; text-align: center;">
-                <button class="btn-copiar" style="background: transparent; color: #fca5a5; border: 1px solid #fca5a5;" onclick="reiniciarActividad()">Finalizar y Borrar mis Datos 🚪</button>
+        </div>
+
+        <!-- PASO 6 (DESPEDIDA FINAL) -->
+        <div id="seccion6" class="section">
+            <div style="text-align: center;">
+                <img src="logo-cepies.jpg" alt="Logo CEPIES" style="max-width: 110px; border-radius: 50%; margin-bottom: 15px; border: 2px solid rgba(255,255,255,0.1);">
+                
+                <h2 class="titulo-seccion titulo-candice" style="color: #4ade80; text-shadow: 0 2px 5px rgba(0,0,0,0.5);">¡Gracias por su tiempo! 🎉</h2>
+                
+                <!-- 🔴 IMAGEN FINAL CON EL NOMBRE CORRECTO 🔴 -->
+                <img src="imagenultima.png" alt="Ing. Mariela Limachi" class="foto-despedida" onerror="this.src='logo-cepies.jpg';"> 
+                
+                <p style="font-size: 1.25rem; color: #e2e8f0; margin-bottom: 15px; padding: 0 15px;">Ha sido un verdadero honor compartir este espacio de aprendizaje y construcción de conocimientos con ustedes.</p>
+                <p style="font-size: 1.5rem; color: #38bdf8; font-weight: bold; margin-bottom: 35px; text-shadow: 0 2px 4px rgba(0,0,0,0.4);">¡Les deseo un feliz y exitoso fin de módulo!</p>
+                
+                <p style="font-size: 1.1rem; color: #94a3b8; font-style: italic; margin-bottom: 0;">Atentamente,</p>
+                <p style="font-size: 1.4rem; font-weight: bold; color: #f8fafc; margin-top: 5px;">Ing. Mariela Nataly Limachi Limachi</p>
+                
+                <div style="border-top: 1px dashed rgba(255,255,255,0.2); margin-top: 40px; padding-top: 25px;">
+                    <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 15px;">Si estás compartiendo este dispositivo, presiona aquí para limpiar la memoria:</p>
+                    <button class="btn-copiar" style="background: transparent; color: #fca5a5; border: 1px solid #fca5a5; font-size: 1rem; padding: 10px 20px;" onclick="reiniciarActividad()">Finalizar y Borrar mis Datos 🚪</button>
+                </div>
             </div>
         </div>
 
@@ -329,7 +348,6 @@
             if(pasoGuardado && pasoGuardado !== 'seccion1') {
                 mostrarSeccion(pasoGuardado);
                 
-                // Si el alumno ya descubrió el botón final (ya descargó la tarjeta del paso 4)
                 if(pMejorado && localStorage.getItem('cepies_btnDescubierto')) {
                     document.getElementById('promptMejorado').disabled = true;
                     document.getElementById('btnRepasarMetodologia').classList.add('hidden');
@@ -479,7 +497,6 @@
             if(textareaId === 'promptBasico') { 
                 accion = () => mostrarSeccion('seccion3'); 
             } else { 
-                // 🔴 ACCIÓN AL FINALIZAR EL PASO 4 (BLOQUEO Y AVANCE AUTOMÁTICO)
                 accion = () => {
                     document.getElementById('promptMejorado').disabled = true;
                     document.getElementById('btnRepasarMetodologia').classList.add('hidden');
@@ -487,7 +504,6 @@
                     document.getElementById('btnIrAutoEval').classList.remove('hidden');
                     localStorage.setItem('cepies_btnDescubierto', 'true');
                     
-                    // Avance directo automático
                     mostrarSeccion('seccion5');
                 };
             }
@@ -607,7 +623,12 @@
             ctx.fillText(`${nombre} • Módulo 3 - CEPIES`, cx, cy);
 
             const nombreLimpio = nombre.replace(/ /g,"_");
-            mostrarModalImagen(canvas, "¡Tu Autoevaluación! 🎓", "<span style='font-size:2rem;'>👆</span><br><strong>Mantén presionada la imagen</strong> para guardarla en tu dispositivo.", null, `Autoevaluacion_${nombreLimpio}.jpg`);
+            
+            let accionFinal = () => {
+                mostrarSeccion('seccion6');
+            };
+            
+            mostrarModalImagen(canvas, "¡Tu Autoevaluación! 🎓", "<span style='font-size:2rem;'>👆</span><br><strong>Mantén presionada la imagen</strong> para guardarla en tu dispositivo.", accionFinal, `Autoevaluacion_${nombreLimpio}.jpg`);
         };
     </script>
 </body>
