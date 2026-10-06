@@ -183,7 +183,6 @@
                         Generar mi progreso para compartirlo en el grupo del Diplomado! 🤝🚀
                     </button>
                     
-                    <!-- Botón oculto por defecto -->
                     <button id="btnIrAutoEval" class="btn btn-blue hidden" style="margin-top:25px;" onclick="mostrarSeccion('seccion5')">
                         Ir a mi Autoevaluación Final 👉
                     </button>
@@ -306,7 +305,6 @@
         logoImg.crossOrigin = "anonymous";
         logoImg.src = "logo-cepies.jpg";
 
-        // ---- LÓGICA DE MEMORIA SEGURA ----
         document.addEventListener("DOMContentLoaded", function() {
             const pasoGuardado = localStorage.getItem('cepies_paso');
             const nomGuardado = localStorage.getItem('cepies_nombre');
@@ -359,7 +357,6 @@
             mostrarSeccion('seccion2');
         }
 
-        // ---- LÓGICA DEL MODAL DE IMÁGENES ----
         let accionPostModal = null;
         let nombreArchivoDescarga = "Imagen.jpg";
 
@@ -417,17 +414,27 @@
             ctx.beginPath(); ctx.moveTo(x + radio, y); ctx.lineTo(x + ancho - radio, y); ctx.quadraticCurveTo(x + ancho, y, x + ancho, y + radio); ctx.lineTo(x + ancho, y + alto - radio); ctx.quadraticCurveTo(x + ancho, y + alto, x + ancho - radio, y + alto); ctx.lineTo(x + radio, y + alto); ctx.quadraticCurveTo(x, y + alto, x, y + alto - radio); ctx.lineTo(x, y + radio); ctx.quadraticCurveTo(x, y, x + radio, y); ctx.closePath(); ctx.fill(); ctx.stroke();
         }
 
-        function generarCanvas(textareaId, tipo, nombre, texto, logo) {
+        function generarCanvas(textareaId, tipo, nombre, textoPrueba, logo) {
             const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
             const anchoCanvas = 900, margenExterior = 40, margenInterior = 40;
             const anchoTarjeta = anchoCanvas - (margenExterior * 2), maxWidthTexto = anchoTarjeta - (margenInterior * 2);
             const lineHeight = 38; 
             
             ctx.font = "24px 'Quicksand', sans-serif";
-            const palabras = texto.split(' '); let lineas = [], lineaActual = '';
+            
+            // 🔴 BLINDAJE: Si una palabra es demasiado larga sin espacios, fuerza un corte
+            const textoLimpio = textoPrueba.replace(/([^\s]{40})/g, "$1 ");
+            const palabras = textoLimpio.split(' '); 
+            let lineas = [], lineaActual = '';
+            
             for(let n = 0; n < palabras.length; n++) {
                 let testLinea = lineaActual + palabras[n] + ' ';
-                if (ctx.measureText(testLinea).width > maxWidthTexto && n > 0) { lineas.push(lineaActual); lineaActual = palabras[n] + ' '; } else { lineaActual = testLinea; }
+                if (ctx.measureText(testLinea).width > maxWidthTexto && n > 0) { 
+                    lineas.push(lineaActual); 
+                    lineaActual = palabras[n] + ' '; 
+                } else { 
+                    lineaActual = testLinea; 
+                }
             }
             lineas.push(lineaActual);
 
@@ -544,7 +551,6 @@
             if (puntajes.q3 < 2) feedback += "• Falta justificar claramente qué mejoró en tu nueva versión.\n";
             if (total === 6) feedback = "¡Excelente trabajo! Tu prompt es claro, preciso y está bien estructurado.";
 
-            // 🔴 ENVIAR AVISO A FIREBASE DE QUE SE COMPLETÓ LA AUTOEVALUACIÓN
             if(window.enviarPromptFirebase) {
                 window.enviarPromptFirebase(nombre, "Autoevaluación", `Puntaje: ${total}/6. Reflexión: ${reflexion}`);
             }
