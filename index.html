@@ -39,6 +39,8 @@
         .btn-volver { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255,255,255,0.3); margin-bottom: 15px; }
         .btn-copiar { background: #475569; padding: 8px 15px; font-size: 1rem; border-radius: 8px; margin-top: 10px; box-shadow: none; width: auto; display: inline-block;}
         .btn-copiar:hover { background: #64748b; transform: none; }
+        
+        .hidden { display: none !important; }
 
         .claro-grid { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin: 2rem 0; }
         .claro-card { background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 1.5rem 1rem; width: 100%; max-width: 230px; text-align: center; transition: transform 0.3s; }
@@ -81,13 +83,14 @@
         <h1 class="titulo-candice">Diplomado en Educación Superior</h1>
         <h2>Gestión Curricular Basada en Competencias</h2>
         <h3>MÓDULO 3: Evaluación de Aprendizaje • POST GRADO - CEPIES</h3>
-        <p class="author">Lic. Mariela Nataly Limachi Limachi</p>
+        <p class="author">Ing. Mariela Nataly Limachi Limachi</p>
     </header>
 
     <div class="container">
         <!-- PASO 1 -->
         <div id="seccion1" class="section active">
             <h2 class="titulo-seccion titulo-candice">Paso 1: Identificación</h2>
+            <p style="text-align: center; color: #cbd5e1; font-size: 0.95rem; margin-top: -15px;">Su progreso se guardará automáticamente en este dispositivo.</p>
             <div class="form-group">
                 <label for="nombres">Escriba su nombre y apellido:</label>
                 <input type="text" id="nombres" placeholder="Ej. Mariela Limachi" onkeypress="if(event.key === 'Enter') validarPaso1();">
@@ -135,7 +138,6 @@
         <div id="seccion4" class="section">
             <h2 class="titulo-seccion titulo-candice" style="margin-bottom: 2rem; text-shadow: 0 4px 6px rgba(0,0,0,0.5);">Paso 4: Aplicando la Metodología</h2>
             <div class="paso4-layout">
-                
                 <!-- IZQUIERDA -->
                 <div class="col-lateral">
                     <div class="prompt-ejemplo-item" id="textoEjemplo1">
@@ -173,6 +175,7 @@
                         ¡Descargar mi progreso para compartirlo en el grupo del Diplomado! 🤝🚀
                     </button>
                     
+                    <!-- Botón oculto por defecto -->
                     <button id="btnIrAutoEval" class="btn btn-blue hidden" style="margin-top:25px;" onclick="mostrarSeccion('seccion5')">
                         Ir a mi Autoevaluación Final 👉
                     </button>
@@ -229,11 +232,15 @@
 
             <div class="form-group">
                 <label>Mi reflexión (Completa: "Ahora precisé... para..." o "Todavía necesito mejorar...")</label>
-                <input type="text" id="reflexionTexto" maxlength="220" placeholder="Ej. Precisé el fondo para evitar contradicciones.">
+                <input type="text" id="reflexionTexto" maxlength="220" placeholder="Ej. Precisé el fondo para evitar contradicciones." oninput="guardarDatosLocales()">
             </div>
 
             <button class="btn btn-blue" onclick="generarTarjetaAutoEval()">Ver y Descargar mi Autoevaluación 📥</button>
             <p style="text-align: center; color: #64748b; font-size: 0.9rem; margin-top: 15px;">Tus respuestas son privadas y solo se usarán para generar tu tarjeta local.</p>
+            
+            <div style="border-top: 1px solid rgba(255,255,255,0.1); margin-top: 30px; padding-top: 20px; text-align: center;">
+                <button class="btn-copiar" style="background: transparent; color: #fca5a5; border: 1px solid #fca5a5;" onclick="reiniciarActividad()">Finalizar y Borrar mis Datos 🚪</button>
+            </div>
         </div>
 
     </div>
@@ -276,6 +283,39 @@
         logoImg.crossOrigin = "anonymous";
         logoImg.src = "logo-cepies.jpg";
 
+        // LÓGICA DE MEMORIA (LocalStorage)
+        window.onload = function() {
+            const pasoGuardado = localStorage.getItem('cepies_paso');
+            const nomGuardado = localStorage.getItem('cepies_nombre');
+            const pBasico = localStorage.getItem('cepies_pBasico');
+            const pMejorado = localStorage.getItem('cepies_pMejorado');
+            
+            if(nomGuardado) document.getElementById('nombres').value = nomGuardado;
+            if(pBasico) document.getElementById('promptBasico').value = pBasico;
+            if(pMejorado) document.getElementById('promptMejorado').value = pMejorado;
+
+            if(pasoGuardado && pasoGuardado !== 'seccion1') {
+                mostrarSeccion(pasoGuardado);
+                // Si ya llegó al paso 4 o 5 y tiene el mejorado, mostramos el botón
+                if(pMejorado && localStorage.getItem('cepies_btnDescubierto')) {
+                    document.getElementById('btnIrAutoEval').classList.remove('hidden');
+                }
+            }
+        };
+
+        window.guardarDatosLocales = function() {
+            localStorage.setItem('cepies_nombre', document.getElementById('nombres').value);
+            localStorage.setItem('cepies_pBasico', document.getElementById('promptBasico').value);
+            localStorage.setItem('cepies_pMejorado', document.getElementById('promptMejorado').value);
+        }
+
+        window.reiniciarActividad = function() {
+            if(confirm("¿Seguro que desea finalizar? Esto borrará sus datos de este equipo para que otra persona pueda usarlo.")) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
         window.copiarTexto = function(idContenedor) {
             let contenedor = document.getElementById(idContenedor);
             let textoLimpio = "";
@@ -287,11 +327,13 @@
         window.mostrarSeccion = function(id) {
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
             document.getElementById(id).classList.add('active');
+            localStorage.setItem('cepies_paso', id);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         window.validarPaso1 = function() {
             if(!document.getElementById('nombres').value.trim()) { alert("Escriba su nombre."); return; }
+            guardarDatosLocales();
             mostrarSeccion('seccion2');
         }
 
@@ -300,6 +342,8 @@
             const texto = document.getElementById(textareaId).value.trim();
             if(!texto) { alert("Escriba su prompt primero."); return; }
             
+            guardarDatosLocales();
+
             if(window.enviarPromptFirebase) { window.enviarPromptFirebase(nombre, tipo, texto); }
             generarCanvas(textareaId, tipo, nombre, texto, (logoImg.complete && logoImg.naturalWidth > 0) ? logoImg : null);
         }
@@ -348,13 +392,19 @@
             currentY += 20; ctx.fillStyle = "#64748b"; ctx.font = "italic 18px 'Quicksand', sans-serif"; ctx.fillText("Módulo 3: Evaluación de Aprendizaje • Post Grado CEPIES", startX, currentY);
 
             const link = document.createElement('a'); link.download = tipo.replace(/ /g,"_") + "_" + nombre.replace(/ /g,"_") + ".jpg"; link.href = canvas.toDataURL("image/jpeg"); link.click();
-            if(textareaId === 'promptBasico') { setTimeout(() => { mostrarSeccion('seccion3'); }, 1000); } else { document.getElementById('btnIrAutoEval').classList.remove('hidden'); }
+            
+            if(textareaId === 'promptBasico') { 
+                setTimeout(() => { mostrarSeccion('seccion3'); }, 1000); 
+            } else { 
+                // Hacer aparecer el botón de autoevaluación SOLO al descargar el paso 4
+                document.getElementById('btnIrAutoEval').classList.remove('hidden'); 
+                localStorage.setItem('cepies_btnDescubierto', 'true');
+            }
         }
 
-        /* Lógica para descargar la infografía extendida C.L.A.R.O. */
         window.descargarMetodologia = function() {
             const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
-            canvas.width = 900; canvas.height = 820; // Altura aumentada para el texto extendido
+            canvas.width = 900; canvas.height = 820; 
             
             ctx.fillStyle = "#0f172a"; ctx.fillRect(0,0,canvas.width,canvas.height);
             ctx.fillStyle = "#1e293b"; ctx.strokeStyle = "#3b82f6"; ctx.lineWidth = 3;
@@ -365,7 +415,6 @@
             ctx.fillStyle = "#f8fafc"; ctx.font = "bold 34px 'Quicksand', sans-serif"; ctx.fillText("METODOLOGÍA C.L.A.R.O.", 60, 85);
             ctx.fillStyle = "#38bdf8"; ctx.font = "italic 20px 'Quicksand', sans-serif"; ctx.fillText("Guía Avanzada para el Diseño de Prompts Educativos - CEPIES", 60, 120);
 
-            // Función interna para saltos de línea automáticos del texto extendido
             function wrapText(context, text, x, y, maxWidth, lineHeight) {
                 let words = text.split(' '); let line = '';
                 for(let n = 0; n < words.length; n++) {
@@ -392,7 +441,7 @@
                 ctx.fillStyle = "#38bdf8"; ctx.font = "bold 24px 'Quicksand', sans-serif"; ctx.fillText(pasos[i].t, 115, cy - 5);
                 ctx.fillStyle = "#cbd5e1"; ctx.font = "18px 'Quicksand', sans-serif"; 
                 cy = wrapText(ctx, pasos[i].d, 115, cy + 25, 710, 26);
-                cy += 25; // Espacio entre letras
+                cy += 25; 
             }
 
             ctx.fillStyle = "#fca5a5"; ctx.font = "bold 18px 'Quicksand', sans-serif"; ctx.fillText("¡Guarda esta guía estructurada para tus futuros diseños de prompts docentes!", 60, 755);
@@ -400,7 +449,6 @@
             const link = document.createElement('a'); link.download = "Guia_Avanzada_CLARO_CEPIES.jpg"; link.href = canvas.toDataURL("image/jpeg"); link.click();
         }
 
-        /* Lógica Paso 5: Autoevaluación y Retroalimentación */
         let puntajes = { q1: -1, q2: -1, q3: -1 };
         window.seleccionarOpcion = function(grupo, valor) {
             puntajes[grupo] = valor;
