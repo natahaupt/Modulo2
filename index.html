@@ -287,7 +287,7 @@
             <h2 class="titulo-seccion titulo-candice">Paso 1: Identificación</h2>
             <div class="form-group">
                 <label for="nombres">Escriba su nombre y apellido:</label>
-                <input type="text" id="nombres" placeholder="Ej. Mariela Limachi">
+                <input type="text" id="nombres" placeholder="Ej. Mariela Limachi" onkeypress="if(event.key === 'Enter') validarPaso1();">
             </div>
             <button class="btn btn-blue" onclick="validarPaso1()">Crear mi instrucción inicial</button>
         </div>
@@ -297,7 +297,7 @@
             <h2 class="titulo-seccion titulo-candice">Paso 2: Su Primer Intento</h2>
             <div class="form-group">
                 <label for="promptBasico">Si tuviera que pedirle a una Inteligencia Artificial que convierta su fotografía en un dibujo animado, ¿cómo redactaría su instrucción o "prompt" inicial?</label>
-                <textarea id="promptBasico" placeholder="Escriba aquí su primera idea..."></textarea>
+                <textarea id="promptBasico" placeholder="Ejemplo rápido: 'Dibújame como niña animada'"></textarea>
             </div>
             
             <div class="info-box" style="text-align: center; margin-bottom: 15px;">
@@ -305,9 +305,9 @@
                 <div style="color: #cbd5e1; font-style: italic;">"Dibújame como niña animada"</div>
             </div>
 
-            <!-- Botón Original Restaurado Paso 2 -->
+            <!-- Botón de Descarga Paso 2 -->
             <button class="btn" onclick="prepararDescarga('promptBasico', 'Instrucción Inicial')">
-                Presione aquí para descargar la imagen y, por favor, enviarla al grupo de WhatsApp 💬😃
+                Presione aquí para descargar la imagen y, por favor, envíela al grupo de WhatsApp 💬😃
             </button>
         </div>
 
@@ -395,9 +395,9 @@
                 👈 Volver al cuadro C.L.A.R.O.
             </button>
 
-            <!-- Botón Original Restaurado Paso 4 -->
+            <!-- Botón de Descarga Paso 4 -->
             <button class="btn" onclick="prepararDescarga('promptMejorado', 'Instrucción Especializada')">
-                Presione aquí para descargar su tarjeta final y, por favor, enviarla al grupo de WhatsApp 💬😃
+                Presione aquí para descargar su tarjeta final y, por favor, envíela al grupo de WhatsApp 💬😃
             </button>
             
             <div id="mensajeFinal" class="hidden" style="text-align: center; color: #38bdf8; font-size: 1.3rem; font-weight: bold; margin-top: 1.5rem;">
@@ -408,7 +408,7 @@
     </div>
 
     <script>
-        // Precargar el logo para evitar retrasos al generar la imagen
+        // Cargar logo limpiamente
         const logoImg = new Image();
         logoImg.crossOrigin = "anonymous";
         logoImg.src = "logo-cepies.jpg";
@@ -453,9 +453,7 @@
                 return;
             }
 
-            // Usar el logo solo si ya cargó exitosamente
             const logoUsar = (logoImg.complete && logoImg.naturalWidth > 0) ? logoImg : null;
-            
             generarCanvas(textareaId, tipo, nombre, texto, logoUsar);
         }
 
@@ -515,4 +513,61 @@
                 ctx.save();
                 ctx.beginPath();
                 ctx.arc(logoX + logoSize/2, logoY + logoSize/2, logoSize/2, 0, Math.PI * 2, true);
-                ctx
+                ctx.closePath();
+                ctx.clip();
+                ctx.drawImage(logo, logoX, logoY, logoSize, logoSize);
+                ctx.restore();
+            }
+
+            const startX = margenExterior + margenInterior;
+            let currentY = margenExterior + margenInterior + 20;
+
+            ctx.fillStyle = "#EA2027"; 
+            ctx.font = "400 38px 'Pacifico', cursive";
+            ctx.fillText(nombre, startX, currentY);
+            
+            currentY += 40;
+
+            ctx.fillStyle = "#cbd5e1";
+            ctx.font = "bold 22px 'Quicksand', sans-serif";
+            ctx.fillText(tipo.toUpperCase(), startX, currentY);
+
+            currentY += 30;
+
+            ctx.beginPath();
+            ctx.moveTo(startX, currentY);
+            ctx.lineTo(canvas.width - margenExterior - margenInterior, currentY);
+            ctx.strokeStyle = "rgba(255,255,255,0.1)";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            currentY += 45;
+
+            ctx.fillStyle = "#f8fafc";
+            ctx.font = "24px 'Quicksand', sans-serif";
+            for(let i = 0; i < lineas.length; i++) {
+                ctx.fillText(lineas[i], startX, currentY);
+                currentY += lineHeight;
+            }
+
+            currentY += 20;
+            ctx.fillStyle = "#64748b";
+            ctx.font = "italic 18px 'Quicksand', sans-serif";
+            ctx.fillText("Módulo 3: Evaluación de Aprendizaje • Post Grado CEPIES", startX, currentY);
+
+            // Descargar imagen limpia
+            const enlaceDescarga = document.createElement('a');
+            enlaceDescarga.download = tipo.replace(/ /g,"_") + "_" + nombre.replace(/ /g,"_") + ".jpg";
+            enlaceDescarga.href = canvas.toDataURL("image/jpeg");
+            enlaceDescarga.click();
+
+            // Avanzar de paso
+            if(textareaId === 'promptBasico') {
+                setTimeout(() => { mostrarSeccion('seccion3'); }, 1000);
+            } else {
+                document.getElementById('mensajeFinal').classList.remove('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
