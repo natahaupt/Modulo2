@@ -10,7 +10,7 @@
         p.subtitulo { text-align: center; color: #94a3b8; margin-top: 0; margin-bottom: 20px; }
         
         /* PESTAÑAS (TABS) */
-        .tabs { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
+        .tabs { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; }
         .tab-btn { background: #1e293b; color: #94a3b8; border: 2px solid transparent; padding: 12px 25px; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .tab-btn:hover { color: #fff; background: #334155; }
         .tab-btn.activo { background: rgba(56, 189, 248, 0.1); color: #38bdf8; border-color: #38bdf8; }
@@ -34,16 +34,17 @@
         .estado-ok { color: #4ade80; background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.3); }
         .estado-espera { color: #94a3b8; background: rgba(255, 255, 255, 0.05); border: 1px dashed rgba(255, 255, 255, 0.2); }
 
-        /* TABLA DE RÚBRICA */
+        /* TABLA DE RÚBRICA POR COMPETENCIAS */
         .tabla-contenedor { overflow-x: auto; background: #1e293b; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); padding: 1px; }
-        table { width: 100%; border-collapse: collapse; text-align: left; }
-        th { background: #0f172a; color: #38bdf8; padding: 15px; font-size: 1rem; border-bottom: 2px solid rgba(255,255,255,0.1); white-space: nowrap; }
-        td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #e2e8f0; vertical-align: middle; }
+        table { width: 100%; min-width: 1000px; border-collapse: collapse; text-align: left; }
+        th { background: #0f172a; color: #38bdf8; padding: 12px 10px; font-size: 0.95rem; border-bottom: 2px solid rgba(255,255,255,0.1); line-height: 1.3; }
+        th span { display: block; font-size: 0.75rem; color: #94a3b8; font-weight: normal; margin-top: 3px; }
+        td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #e2e8f0; vertical-align: middle; }
         tr:hover { background: rgba(255,255,255,0.02); }
-        select { background: #0f172a; color: #fff; border: 1px solid #3b82f6; padding: 8px; border-radius: 6px; font-family: 'Quicksand'; font-size: 0.95rem; cursor: pointer; width: 100%; outline: none; }
+        select { background: #0f172a; color: #fff; border: 1px solid #3b82f6; padding: 8px; border-radius: 6px; font-family: 'Quicksand'; font-size: 0.9rem; cursor: pointer; width: 100%; outline: none; }
         select:focus { box-shadow: 0 0 8px rgba(59, 130, 246, 0.5); }
-        .nota-final { font-size: 1.3rem; font-weight: bold; color: #4ade80; text-align: center; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 8px; }
-        .estado-badge { padding: 5px 10px; border-radius: 50px; font-size: 0.8rem; font-weight: bold; display: inline-block; }
+        .nota-final { font-size: 1.3rem; font-weight: bold; color: #4ade80; text-align: center; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 8px; min-width: 80px; }
+        .estado-badge { padding: 5px 10px; border-radius: 50px; font-size: 0.75rem; font-weight: bold; display: inline-block; text-align: center; width: 80px; }
         .bg-verde { background: rgba(74, 222, 128, 0.2); color: #4ade80; border: 1px solid #4ade80; }
         .bg-rojo { background: rgba(234, 32, 39, 0.2); color: #fca5a5; border: 1px solid #EA2027; }
     </style>
@@ -51,12 +52,12 @@
 <body>
 
     <h1>Panel de Evaluación Docente 🎓</h1>
-    <p class="subtitulo">Seguimiento y Calificación - Ing. Mariela Nataly Limachi Limachi</p>
+    <p class="subtitulo">Seguimiento y Calificación Basada en Competencias - Ing. Mariela Limachi</p>
 
     <!-- BOTONES DE PESTAÑAS -->
     <div class="tabs">
         <button id="btnTarjetas" class="tab-btn activo" onclick="cambiarVista('tarjetas')">👁️ Monitoreo en Vivo</button>
-        <button id="btnRubrica" class="tab-btn" onclick="cambiarVista('rubrica')">📋 Rúbrica de Evaluación</button>
+        <button id="btnRubrica" class="tab-btn" onclick="cambiarVista('rubrica')">📋 Rúbrica por Competencias</button>
     </div>
 
     <!-- VISTA 1: TARJETAS EN VIVO -->
@@ -72,20 +73,22 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Estudiante</th>
-                        <th>Estado</th>
-                        <th title="¿Aplicó los 5 pasos de C.L.A.R.O.?">1. Metodología (0-5)</th>
-                        <th title="¿Su instrucción especializada es clara y sin ambigüedades?">2. Precisión (0-5)</th>
-                        <th title="¿Su reflexión muestra comprensión de mejora?">3. Reflexión (0-5)</th>
-                        <th>Puntaje Total</th>
+                        <th style="width: 15%;">Estudiante</th>
+                        <th style="width: 8%;">Estado</th>
+                        <th title="Saber: Comprende la lógica de la metodología y la IA">Comprensión <span>(Saber)</span></th>
+                        <th title="Saber Hacer: Redacta y estructura prompts con precisión">Escritura <span>(Saber Hacer)</span></th>
+                        <th title="Saber Ser: Se involucra y participa en la dinámica">Participación <span>(Saber Ser)</span></th>
+                        <th title="Saber Ser: Cumple con los tiempos establecidos">Puntualidad <span>(Saber Ser)</span></th>
+                        <th title="Innovación: Explora más allá de lo básico, propone ideas">Curiosidad <span>(Transformar)</span></th>
+                        <th style="width: 10%; text-align: center;">Total (25)</th>
                     </tr>
                 </thead>
                 <tbody id="cuerpoTabla">
-                    <tr><td colspan="6" style="text-align:center; color:#94a3b8;">Esperando estudiantes...</td></tr>
+                    <tr><td colspan="8" style="text-align:center; color:#94a3b8;">Esperando estudiantes...</td></tr>
                 </tbody>
             </table>
         </div>
-        <p style="text-align: center; color: #64748b; font-size: 0.9rem; margin-top: 15px;">* Las notas se calculan automáticamente. Se pierden al recargar la página (se sugiere hacer captura para su registro).</p>
+        <p style="text-align: center; color: #64748b; font-size: 0.9rem; margin-top: 15px;">* Cada dimensión se evalúa sobre 5 puntos. Las notas calculadas se reinician al actualizar la página.</p>
     </div>
 
     <!-- SCRIPT PRINCIPAL Y FIREBASE -->
@@ -122,7 +125,7 @@
             }
         };
 
-        // Función para borrar tarjetas (y fila de tabla)
+        // Borrar datos
         window.borrarTablero = async function(idsString) {
             if(confirm("¿Seguro que desea ELIMINAR el trabajo de este estudiante?")) {
                 try {
@@ -134,13 +137,16 @@
             }
         };
 
-        // Función para calcular la nota en la tabla
+        // Calcular la nota final en base a las 5 competencias
         window.calcularNota = function(idFila) {
             const val1 = parseInt(document.getElementById(`c1_${idFila}`).value) || 0;
             const val2 = parseInt(document.getElementById(`c2_${idFila}`).value) || 0;
             const val3 = parseInt(document.getElementById(`c3_${idFila}`).value) || 0;
-            const total = val1 + val2 + val3;
-            document.getElementById(`total_${idFila}`).innerText = total + " / 15";
+            const val4 = parseInt(document.getElementById(`c4_${idFila}`).value) || 0;
+            const val5 = parseInt(document.getElementById(`c5_${idFila}`).value) || 0;
+            
+            const total = val1 + val2 + val3 + val4 + val5;
+            document.getElementById(`total_${idFila}`).innerText = total + " / 25";
         };
 
         const q = query(collection(db, "prompts"), orderBy("timestamp", "asc"));
@@ -150,12 +156,17 @@
             const cuerpoTabla = document.getElementById("cuerpoTabla");
             
             contenedor.innerHTML = ""; 
-            cuerpoTabla.innerHTML = "";
             
+            // Solo limpiamos la tabla si realmente no hay nadie, para no borrar las notas que el docente ya ingresó
             if (snapshot.empty) {
                 contenedor.innerHTML = '<p style="text-align:center; width:100%; color:#94a3b8;">Esperando las respuestas de los estudiantes...</p>';
-                cuerpoTabla.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#94a3b8;">Esperando estudiantes...</td></tr>';
+                cuerpoTabla.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#94a3b8;">Esperando estudiantes...</td></tr>';
                 return;
+            } else {
+                // Quitamos el mensaje de "esperando" de la tabla si existe
+                if(cuerpoTabla.innerHTML.includes("Esperando estudiantes")) {
+                    cuerpoTabla.innerHTML = "";
+                }
             }
 
             const estudiantes = {};
@@ -173,7 +184,7 @@
                         autoevaluacion: false,
                         primeraFecha: tiempoEnMilisegundos,
                         docIds: [],
-                        idLimpio: nombreClave.replace(/\s+/g, '_') // ID único para la tabla
+                        idLimpio: nombreClave.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '') 
                     };
                 }
                 
@@ -193,7 +204,7 @@
 
             const listaOrdenada = Object.values(estudiantes).sort((a, b) => a.primeraFecha - b.primeraFecha);
 
-            // Opciones de calificación (0 a 5)
+            // Opciones de calificación
             const opcionesSelect = `
                 <option value="0">0 - No aplica</option>
                 <option value="1">1 - Deficiente</option>
@@ -203,7 +214,12 @@
                 <option value="5" selected>5 - Excelente</option>
             `;
 
+            // Mantener un registro de los alumnos que siguen existiendo en la base de datos
+            const alumnosActuales = [];
+
             listaOrdenada.forEach(est => {
+                alumnosActuales.push(`fila_${est.idLimpio}`);
+
                 // ==========================================
                 // 1. GENERAR TARJETA (Pestaña 1)
                 // ==========================================
@@ -240,20 +256,34 @@
                 // ==========================================
                 // 2. GENERAR FILA DE TABLA (Pestaña 2)
                 // ==========================================
-                // Si la fila ya existe, no la sobreescribimos para no borrarle las notas que ya estaba poniendo el docente
-                if(!document.getElementById(`fila_${est.idLimpio}`)) {
-                    const fila = document.createElement("tr");
+                let fila = document.getElementById(`fila_${est.idLimpio}`);
+                
+                // Si la fila no existe, la creamos
+                if(!fila) {
+                    fila = document.createElement("tr");
                     fila.id = `fila_${est.idLimpio}`;
                     
                     fila.innerHTML = `
-                        <td style="font-weight:bold; font-size:1.1rem;">${est.nombreOriginal}</td>
-                        <td>${estadoBadge}</td>
+                        <td style="font-weight:bold; font-size:1.05rem;">${est.nombreOriginal}</td>
+                        <td id="estado_${est.idLimpio}">${estadoBadge}</td>
                         <td><select id="c1_${est.idLimpio}" onchange="calcularNota('${est.idLimpio}')">${opcionesSelect}</select></td>
                         <td><select id="c2_${est.idLimpio}" onchange="calcularNota('${est.idLimpio}')">${opcionesSelect}</select></td>
                         <td><select id="c3_${est.idLimpio}" onchange="calcularNota('${est.idLimpio}')">${opcionesSelect}</select></td>
-                        <td><div id="total_${est.idLimpio}" class="nota-final">15 / 15</div></td>
+                        <td><select id="c4_${est.idLimpio}" onchange="calcularNota('${est.idLimpio}')">${opcionesSelect}</select></td>
+                        <td><select id="c5_${est.idLimpio}" onchange="calcularNota('${est.idLimpio}')">${opcionesSelect}</select></td>
+                        <td><div id="total_${est.idLimpio}" class="nota-final">25 / 25</div></td>
                     `;
                     cuerpoTabla.appendChild(fila);
+                } else {
+                    // Si la fila ya existe, SOLO actualizamos su botón de estado (por si pasó de En Proceso a Finalizado)
+                    document.getElementById(`estado_${est.idLimpio}`).innerHTML = estadoBadge;
+                }
+            });
+
+            // Limpiar de la tabla a los alumnos que hayan sido borrados de la base de datos
+            Array.from(cuerpoTabla.children).forEach(fila => {
+                if (fila.id && !alumnosActuales.includes(fila.id)) {
+                    cuerpoTabla.removeChild(fila);
                 }
             });
         });
