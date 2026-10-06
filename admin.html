@@ -13,12 +13,17 @@
         .card.completado { border-left-color: #38bdf8; background: #172554; }
         .nombre { font-size: 1.3rem; font-weight: bold; margin-bottom: 15px; color: #f8fafc; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; padding-right: 70px; }
         .tipo { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; margin-bottom: 5px; }
-        .prompt { background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; font-style: italic; font-size: 0.95rem; line-height: 1.5; color: #e2e8f0; }
-        .seccion-prompt { margin-bottom: 15px; }
         
+        /* 🔴 AQUÍ ESTÁ EL BLINDAJE CONTRA TEXTOS SIN ESPACIOS */
+        .prompt { 
+            background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; 
+            font-style: italic; font-size: 0.95rem; line-height: 1.5; color: #e2e8f0;
+            overflow-wrap: break-word; word-break: break-word; 
+        }
+        
+        .seccion-prompt { margin-bottom: 15px; }
         .btn-borrar { position: absolute; top: 15px; right: 15px; background: rgba(234, 32, 39, 0.1); border: 1px solid #EA2027; color: #fca5a5; border-radius: 6px; cursor: pointer; padding: 6px 10px; font-size: 0.85rem; font-weight: bold; transition: 0.3s; }
         .btn-borrar:hover { background: #EA2027; color: #fff; }
-
         .etiqueta-estado { text-align: center; font-size: 0.9rem; font-weight: bold; padding: 8px; border-radius: 6px; margin-top: 15px; }
         .estado-ok { color: #4ade80; background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.3); }
         .estado-espera { color: #94a3b8; background: rgba(255, 255, 255, 0.05); border: 1px dashed rgba(255, 255, 255, 0.2); }
@@ -126,7 +131,6 @@
                 else html += `<div class="prompt" style="opacity: 0.5;">(Esperando desarrollo...)</div>`;
                 html += `</div>`;
 
-                // ETIQUETA DE AUTOEVALUACIÓN
                 if (est.autoevaluacion) {
                     html += `<div class="etiqueta-estado estado-ok">✅ Autoevaluación Completada</div>`;
                 } else {
