@@ -2,67 +2,117 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Panel en Vivo - CLARO</title>
+    <title>Panel en Vivo - Metodología CLARO</title>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Quicksand', sans-serif; background: #0f172a; color: #fff; padding: 20px; }
-        h1 { text-align: center; color: #38bdf8; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .card { background: #1e293b; padding: 20px; border-radius: 12px; border-left: 5px solid #EA2027; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        .card.especializado { border-left-color: #38bdf8; }
-        .nombre { font-size: 1.2rem; font-weight: bold; margin-bottom: 5px; color: #f8fafc; }
-        .tipo { font-size: 0.9rem; color: #94a3b8; margin-bottom: 10px; font-weight: bold; }
-        .prompt { background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; font-style: italic; font-size: 0.95rem; line-height: 1.4; color: #e2e8f0; }
+        h1 { text-align: center; color: #38bdf8; margin-bottom: 5px; }
+        p.subtitulo { text-align: center; color: #94a3b8; margin-top: 0; margin-bottom: 30px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        .card { background: #1e293b; padding: 20px; border-radius: 12px; border-left: 5px solid #fca5a5; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: all 0.3s; }
+        .card.completado { border-left-color: #38bdf8; background: #172554; }
+        .nombre { font-size: 1.3rem; font-weight: bold; margin-bottom: 15px; color: #f8fafc; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        .tipo { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; margin-bottom: 5px; }
+        .prompt { background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; font-style: italic; font-size: 0.95rem; line-height: 1.5; color: #e2e8f0; }
+        .seccion-prompt { margin-bottom: 15px; }
     </style>
 </head>
 <body>
 
     <h1>Recepción de Prompts en Vivo 📡</h1>
+    <p class="subtitulo">Seguimiento de estudiantes - Diplomado CEPIES</p>
+
     <div id="contenedorPrompts" class="grid">
-        <p style="text-align:center; width:100%; color:#94a3b8;">Esperando las respuestas de los estudiantes...</p>
+        <p style="text-align:center; width:100%; color:#94a3b8;">Esperando las respuestas de los colegas...</p>
     </div>
 
-    <!-- Cargar Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         // 🔴🔴🔴 PEGUE AQUÍ SU FIREBASE CONFIG 🔴🔴🔴
-       const firebaseConfig = {
-  apiKey: "AIzaSyA-bFIpc8iRrpmxKh8ih6spxQVytBmFw3I",
-  authDomain: "cepies-claro.firebaseapp.com",
-  projectId: "cepies-claro",
-  storageBucket: "cepies-claro.firebasestorage.app",
-  messagingSenderId: "448149004343",
-  appId: "1:448149004343:web:038ff270958e703e7f9fb2",
-  measurementId: "G-RDYHRK9LDT"
+        const firebaseConfig = { 
+  apiKey : "AIzaSyA-bFIpc8iRrpmxKh8ih6spxQVytBmFw3I" , 
+  authDomain : "cepies-claro.firebaseapp.com" , 
+  projectId : "cepies-claro" , 
+  storageBucket : "cepies-claro.firebasestorage.app" , 
+  messagingSenderId : "448149004343" , 
+  ID de aplicación : "1:448149004343:web:038ff270958e703e7f9fb2" , 
+  ID de medición : "G-RDYHRK9LDT" 
 };
+
         // 🔴🔴🔴 FIN DEL CONFIG 🔴🔴🔴
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Escuchar datos en vivo
-        const q = query(collection(db, "prompts"), orderBy("timestamp", "desc"));
+        // Pedimos los datos ordenados por fecha
+        const q = query(collection(db, "prompts"), orderBy("timestamp", "asc"));
+        
         onSnapshot(q, (snapshot) => {
             const contenedor = document.getElementById("contenedorPrompts");
             contenedor.innerHTML = ""; 
             
             if (snapshot.empty) {
-                contenedor.innerHTML = '<p style="text-align:center; width:100%; color:#94a3b8;">Esperando las respuestas de los estudiantes...</p>';
+                contenedor.innerHTML = '<p style="text-align:center; width:100%; color:#94a3b8;">Esperando las respuestas de los colegas...</p>';
                 return;
             }
 
+            // Objeto para agrupar los prompts por estudiante
+            const estudiantes = {};
+
             snapshot.forEach((doc) => {
                 const data = doc.data();
+                // Usamos el nombre en minúsculas para agrupar sin importar si usan mayúsculas
+                const nombreClave = data.nombre.trim().toLowerCase();
+
+                if (!estudiantes[nombreClave]) {
+                    estudiantes[nombreClave] = {
+                        nombreOriginal: data.nombre,
+                        inicial: null,
+                        especializada: null
+                    };
+                }
+
+                if (data.tipo.includes("Inicial")) {
+                    estudiantes[nombreClave].inicial = data.prompt;
+                } else if (data.tipo.includes("Especializada")) {
+                    estudiantes[nombreClave].especializada = data.prompt;
+                }
+            });
+
+            // Dibujar las tarjetas agrupadas
+            Object.values(estudiantes).forEach(est => {
                 const card = document.createElement("div");
-                const claseBorde = data.tipo.includes("Especializada") ? "especializado" : "";
-                card.className = `card ${claseBorde}`;
-                card.innerHTML = `
-                    <div class="nombre">👤 ${data.nombre}</div>
-                    <div class="tipo">🏷️ ${data.tipo}</div>
-                    <div class="prompt">"${data.prompt}"</div>
-                `;
+                const completado = est.especializada ? "completado" : "";
+                card.className = `card ${completado}`;
+
+                let html = `<div class="nombre">👤 ${est.nombreOriginal}</div>`;
+
+                // Bloque del Prompt Inicial
+                html += `<div class="seccion-prompt">
+                            <div class="tipo" style="color: #fca5a5;">🎯 Prompt Inicial Básico</div>`;
+                if (est.inicial) {
+                    html += `<div class="prompt">"${est.inicial}"</div>`;
+                } else {
+                    html += `<div class="prompt" style="opacity: 0.5;">(Aún no enviado)</div>`;
+                }
+                html += `</div>`;
+
+                // Línea separadora
+                html += `<div style="border-top: 1px dashed rgba(255,255,255,0.2); margin: 15px 0;"></div>`;
+
+                // Bloque del Prompt Completo
+                html += `<div class="seccion-prompt" style="margin-bottom:0;">
+                            <div class="tipo" style="color: #38bdf8;">✨ Prompt Completo (Metodología)</div>`;
+                if (est.especializada) {
+                    html += `<div class="prompt">"${est.especializada}"</div>`;
+                } else {
+                    html += `<div class="prompt" style="opacity: 0.5;">(Esperando desarrollo...)</div>`;
+                }
+                html += `</div>`;
+
+                card.innerHTML = html;
                 contenedor.appendChild(card);
             });
         });
