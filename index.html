@@ -30,7 +30,10 @@
         label { display: block; font-weight: 700; margin-bottom: 0.8rem; color: #e2e8f0; font-size: 1.2rem; }
         input[type="text"], textarea { width: 100%; padding: 16px; background: rgba(15, 23, 42, 0.6); border: 2px solid rgba(255, 255, 255, 0.1); color: #fff; border-radius: 12px; box-sizing: border-box; font-family: 'Quicksand', sans-serif; font-size: 1.1rem; transition: all 0.3s ease; }
         input[type="text"]:focus, textarea:focus { outline: none; border-color: var(--azul-brillante); box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); background: rgba(15, 23, 42, 0.9); }
-        input[type="text"]:disabled { background: rgba(255, 255, 255, 0.05); color: #94a3b8; cursor: not-allowed; border-color: rgba(255, 255, 255, 0.05); }
+        
+        /* Estilo para cajas bloqueadas */
+        input[type="text"]:disabled, textarea:disabled { background: rgba(255, 255, 255, 0.05); color: #94a3b8; cursor: not-allowed; border-color: rgba(255, 255, 255, 0.05); }
+        
         textarea { resize: vertical; min-height: 140px; line-height: 1.5; }
 
         .btn { background: var(--rojo-cepies); color: var(--blanco); border: none; padding: 16px 28px; font-family: 'Quicksand', sans-serif; font-size: 1.2rem; font-weight: 700; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; display: block; text-align: center; width: 100%; box-sizing: border-box; box-shadow: 0 8px 20px rgba(234, 32, 39, 0.2); margin-top: 15px; }
@@ -76,7 +79,7 @@
         .option-box p { margin: 0; font-size: 0.9rem; color: #cbd5e1; }
         @media(max-width: 768px) { .options-grid { grid-template-columns: 1fr; } }
 
-        /* NUEVO MODAL A PRUEBA DE WHATSAPP */
+        /* MODAL A PRUEBA DE WHATSAPP */
         .modal-oculto { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); backdrop-filter: blur(5px); overflow: auto; }
         .modal-contenido { background-color: #1e293b; margin: 5% auto; padding: 25px; border: 1px solid #3b82f6; border-radius: 20px; width: 90%; max-width: 500px; text-align: center; box-shadow: 0 0 30px rgba(59, 130, 246, 0.4); position: relative; }
         .cerrar-modal { color: #cbd5e1; position: absolute; right: 20px; top: 15px; font-size: 32px; font-weight: bold; cursor: pointer; line-height: 1; }
@@ -153,7 +156,7 @@
                         <p><strong>[C] CONTEXTO:</strong> Usa mi fotografía subida como única referencia. Quiero convertirla en una ilustración japonesa indie minimalista, manteniendo claramente mi identidad y apariencia.</p>
                         <p><strong>[L] LABOR:</strong> Transforma la foto en un retrato estilo anime doodle japonés: cabeza grande y redondeada, cuerpo pequeño, ojos mínimos, boca muy sutil, líneas dibujadas a mano en azul marino, colores pastel apagados, sombreado plano y textura suave de papel.</p>
                         <p><strong>[A] AUDIENCIA:</strong> La imagen será usada como retrato personal o foto de perfil. Debe transmitir calidez, ternura, calma y una estética acogedora y artística.</p>
-                        <p><strong>[R] REQUISITOS:</strong> Conserva fielmente el rostro, proporciones, peinado, expresión, pose, ropa, colores y accesorios originales. No conviertas a la persona en un personaje anime genérico. Usa un fondo simple terracota, beige o crema con bastante espacio vacío. Añade “[NAME]” en la esquina superior derecha como una firma pequeña, cursiva y natural.</p>
+                        <p><strong>[R] REQUISITOS:</strong> Conserva fielmente el rostro, proporciones, peinado, expression, pose, ropa, colores y accesorios originales. No conviertas a la persona en un personaje anime genérico. Usa un fondo simple terracota, beige o crema con bastante espacio vacío. Añade “[NAME]” en la esquina superior derecha como una firma pequeña, cursiva y natural.</p>
                         <p><strong>[O] OUTPUT:</strong> Imagen cuadrada 1:1, una sola persona, composición limpia, ilustración 2D de alta calidad. Sin bordes, logos ni texto adicional aparte de la firma.</p>
                     </div>
                     <button class="btn btn-copiar" onclick="copiarTexto('textoEjemplo1')">Copiar Ejemplo 1 📋</button>
@@ -178,11 +181,13 @@
                         <textarea id="promptMejorado" placeholder="Escriba o pegue aquí su prompt estructurado..." oninput="guardarDatosLocales()"></textarea>
                     </div>
                     
-                    <button class="btn btn-volver" onclick="mostrarSeccion('seccion3')">👈 Repasar la Metodología</button>
-                    <button class="btn" onclick="prepararDescarga('promptMejorado', 'Instrucción Especializada')">
+                    <!-- Botones que se ocultarán al finalizar el paso -->
+                    <button id="btnRepasarMetodologia" class="btn btn-volver" onclick="mostrarSeccion('seccion3')">👈 Repasar la Metodología</button>
+                    <button id="btnGenerarProgreso" class="btn" onclick="prepararDescarga('promptMejorado', 'Instrucción Especializada')">
                         Generar mi progreso para compartirlo en el grupo del Diplomado! 🤝🚀
                     </button>
                     
+                    <!-- Botón oculto por defecto que aparecerá si recargan -->
                     <button id="btnIrAutoEval" class="btn btn-blue hidden" style="margin-top:25px;" onclick="mostrarSeccion('seccion5')">
                         Ir a mi Autoevaluación Final 👉
                     </button>
@@ -323,7 +328,12 @@
 
             if(pasoGuardado && pasoGuardado !== 'seccion1') {
                 mostrarSeccion(pasoGuardado);
+                
+                // Si el alumno ya descubrió el botón final (ya descargó la tarjeta del paso 4)
                 if(pMejorado && localStorage.getItem('cepies_btnDescubierto')) {
+                    document.getElementById('promptMejorado').disabled = true;
+                    document.getElementById('btnRepasarMetodologia').classList.add('hidden');
+                    document.getElementById('btnGenerarProgreso').classList.add('hidden');
                     document.getElementById('btnIrAutoEval').classList.remove('hidden');
                 }
             } else if (nomGuardado) {
@@ -422,7 +432,6 @@
             
             ctx.font = "24px 'Quicksand', sans-serif";
             
-            // 🔴 BLINDAJE: Si una palabra es demasiado larga sin espacios, fuerza un corte
             const textoLimpio = textoPrueba.replace(/([^\s]{40})/g, "$1 ");
             const palabras = textoLimpio.split(' '); 
             let lineas = [], lineaActual = '';
@@ -470,9 +479,16 @@
             if(textareaId === 'promptBasico') { 
                 accion = () => mostrarSeccion('seccion3'); 
             } else { 
+                // 🔴 ACCIÓN AL FINALIZAR EL PASO 4 (BLOQUEO Y AVANCE AUTOMÁTICO)
                 accion = () => {
-                    document.getElementById('btnIrAutoEval').classList.remove('hidden'); 
+                    document.getElementById('promptMejorado').disabled = true;
+                    document.getElementById('btnRepasarMetodologia').classList.add('hidden');
+                    document.getElementById('btnGenerarProgreso').classList.add('hidden');
+                    document.getElementById('btnIrAutoEval').classList.remove('hidden');
                     localStorage.setItem('cepies_btnDescubierto', 'true');
+                    
+                    // Avance directo automático
+                    mostrarSeccion('seccion5');
                 };
             }
             
