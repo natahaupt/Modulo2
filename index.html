@@ -93,7 +93,7 @@
             <p style="text-align: center; color: #cbd5e1; font-size: 0.95rem; margin-top: -15px;">Su progreso se guardará automáticamente en este dispositivo.</p>
             <div class="form-group">
                 <label for="nombres">Escriba su nombre y apellido:</label>
-                <input type="text" id="nombres" placeholder="Ej. Mariela Limachi" onkeypress="if(event.key === 'Enter') validarPaso1();">
+                <input type="text" id="nombres" placeholder="Ej. Mariela Limachi" oninput="guardarDatosLocales()" onkeypress="if(event.key === 'Enter') validarPaso1();">
             </div>
             <button class="btn btn-blue" onclick="validarPaso1()">Comenzar actividad</button>
         </div>
@@ -103,7 +103,7 @@
             <h2 class="titulo-seccion titulo-candice">Paso 2: Su Primer Intento</h2>
             <div class="form-group">
                 <label for="promptBasico">Si tuviera que pedirle a una Inteligencia Artificial que convierta su fotografía en un dibujo animado, ¿cómo redactaría su instrucción o "prompt" inicial?</label>
-                <textarea id="promptBasico" placeholder="Ejemplo rápido: 'Dibújame como niña animada'"></textarea>
+                <textarea id="promptBasico" placeholder="Ejemplo rápido: 'Dibújame como niña animada'" oninput="guardarDatosLocales()"></textarea>
             </div>
             <div class="info-box" style="text-align: center; margin-bottom: 15px;">
                 <label style="color: #94a3b8; font-size: 1.1rem; font-weight: bold; margin-bottom: 5px; display: inline-block;">Ejemplo de lo que genera un prompt rápido y de pocas palabras:</label>
@@ -167,7 +167,7 @@
 
                     <div class="info-box" style="margin-top:20px;">
                         <strong style="color: #fff; display: block; margin-bottom: 10px;">💡 Redacte su prompt especializado usando la metodología:</strong>
-                        <textarea id="promptMejorado" placeholder="Escriba o pegue aquí su prompt estructurado..."></textarea>
+                        <textarea id="promptMejorado" placeholder="Escriba o pegue aquí su prompt estructurado..." oninput="guardarDatosLocales()"></textarea>
                     </div>
                     
                     <button class="btn btn-volver" onclick="mostrarSeccion('seccion3')">👈 Repasar la Metodología</button>
@@ -232,7 +232,7 @@
 
             <div class="form-group">
                 <label>Mi reflexión (Completa: "Ahora precisé... para..." o "Todavía necesito mejorar...")</label>
-                <input type="text" id="reflexionTexto" maxlength="220" placeholder="Ej. Precisé el fondo para evitar contradicciones." oninput="guardarDatosLocales()">
+                <input type="text" id="reflexionTexto" maxlength="220" placeholder="Ej. Precisé el fondo para evitar contradicciones.">
             </div>
 
             <button class="btn btn-blue" onclick="generarTarjetaAutoEval()">Ver y Descargar mi Autoevaluación 📥</button>
@@ -283,26 +283,7 @@
         logoImg.crossOrigin = "anonymous";
         logoImg.src = "logo-cepies.jpg";
 
-        // LÓGICA DE MEMORIA (LocalStorage)
-        window.onload = function() {
-            const pasoGuardado = localStorage.getItem('cepies_paso');
-            const nomGuardado = localStorage.getItem('cepies_nombre');
-            const pBasico = localStorage.getItem('cepies_pBasico');
-            const pMejorado = localStorage.getItem('cepies_pMejorado');
-            
-            if(nomGuardado) document.getElementById('nombres').value = nomGuardado;
-            if(pBasico) document.getElementById('promptBasico').value = pBasico;
-            if(pMejorado) document.getElementById('promptMejorado').value = pMejorado;
-
-            if(pasoGuardado && pasoGuardado !== 'seccion1') {
-                mostrarSeccion(pasoGuardado);
-                // Si ya llegó al paso 4 o 5 y tiene el mejorado, mostramos el botón
-                if(pMejorado && localStorage.getItem('cepies_btnDescubierto')) {
-                    document.getElementById('btnIrAutoEval').classList.remove('hidden');
-                }
-            }
-        };
-
+        // FUNCIONES DE GUARDADO Y MEMORIA LOCAL
         window.guardarDatosLocales = function() {
             localStorage.setItem('cepies_nombre', document.getElementById('nombres').value);
             localStorage.setItem('cepies_pBasico', document.getElementById('promptBasico').value);
@@ -310,7 +291,7 @@
         }
 
         window.reiniciarActividad = function() {
-            if(confirm("¿Seguro que desea finalizar? Esto borrará sus datos de este equipo para que otra persona pueda usarlo.")) {
+            if(confirm("¿Seguro que desea finalizar? Esto borrará sus datos de este navegador.")) {
                 localStorage.clear();
                 location.reload();
             }
@@ -348,6 +329,27 @@
             generarCanvas(textareaId, tipo, nombre, texto, (logoImg.complete && logoImg.naturalWidth > 0) ? logoImg : null);
         }
 
+        // Recuperar memoria AL INSTANTE (Sin esperar a que cargue todo)
+        (function recuperarMemoriaInmediata() {
+            const pasoGuardado = localStorage.getItem('cepies_paso');
+            const nomGuardado = localStorage.getItem('cepies_nombre');
+            const pBasico = localStorage.getItem('cepies_pBasico');
+            const pMejorado = localStorage.getItem('cepies_pMejorado');
+            
+            if(nomGuardado) document.getElementById('nombres').value = nomGuardado;
+            if(pBasico) document.getElementById('promptBasico').value = pBasico;
+            if(pMejorado) document.getElementById('promptMejorado').value = pMejorado;
+
+            if(pasoGuardado && pasoGuardado !== 'seccion1') {
+                mostrarSeccion(pasoGuardado);
+                // Muestra el botón de auto-evaluación si ya pasaron el paso 4
+                if(pMejorado && localStorage.getItem('cepies_btnDescubierto')) {
+                    document.getElementById('btnIrAutoEval').classList.remove('hidden');
+                }
+            }
+        })();
+
+        // FUNCIONES DE DISEÑO (Canvas)
         function dibujarRectanguloRedondeado(ctx, x, y, ancho, alto, radio) {
             ctx.beginPath(); ctx.moveTo(x + radio, y); ctx.lineTo(x + ancho - radio, y); ctx.quadraticCurveTo(x + ancho, y, x + ancho, y + radio); ctx.lineTo(x + ancho, y + alto - radio); ctx.quadraticCurveTo(x + ancho, y + alto, x + ancho - radio, y + alto); ctx.lineTo(x + radio, y + alto); ctx.quadraticCurveTo(x, y + alto, x, y + alto - radio); ctx.lineTo(x, y + radio); ctx.quadraticCurveTo(x, y, x + radio, y); ctx.closePath(); ctx.fill(); ctx.stroke();
         }
@@ -396,7 +398,6 @@
             if(textareaId === 'promptBasico') { 
                 setTimeout(() => { mostrarSeccion('seccion3'); }, 1000); 
             } else { 
-                // Hacer aparecer el botón de autoevaluación SOLO al descargar el paso 4
                 document.getElementById('btnIrAutoEval').classList.remove('hidden'); 
                 localStorage.setItem('cepies_btnDescubierto', 'true');
             }
