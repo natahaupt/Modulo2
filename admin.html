@@ -16,9 +16,12 @@
         .prompt { background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; font-style: italic; font-size: 0.95rem; line-height: 1.5; color: #e2e8f0; }
         .seccion-prompt { margin-bottom: 15px; }
         
-        /* Botón de borrar */
         .btn-borrar { position: absolute; top: 15px; right: 15px; background: rgba(234, 32, 39, 0.1); border: 1px solid #EA2027; color: #fca5a5; border-radius: 6px; cursor: pointer; padding: 6px 10px; font-size: 0.85rem; font-weight: bold; transition: 0.3s; }
         .btn-borrar:hover { background: #EA2027; color: #fff; }
+
+        .etiqueta-estado { text-align: center; font-size: 0.9rem; font-weight: bold; padding: 8px; border-radius: 6px; margin-top: 15px; }
+        .estado-ok { color: #4ade80; background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.3); }
+        .estado-espera { color: #94a3b8; background: rgba(255, 255, 255, 0.05); border: 1px dashed rgba(255, 255, 255, 0.2); }
     </style>
 </head>
 <body>
@@ -32,7 +35,6 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        // Importamos doc y deleteDoc para poder borrar
         import { getFirestore, collection, onSnapshot, query, orderBy, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -48,17 +50,13 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Función global para borrar el tablero del estudiante
         window.borrarTablero = async function(idsString) {
-            if(confirm("¿Seguro que desea ELIMINAR el trabajo de este estudiante? Esta acción no se puede deshacer.")) {
+            if(confirm("¿Seguro que desea ELIMINAR el trabajo de este estudiante?")) {
                 try {
                     const ids = idsString.split(',');
-                    for(let id of ids) {
-                        if(id) await deleteDoc(doc(db, "prompts", id));
-                    }
+                    for(let id of ids) { if(id) await deleteDoc(doc(db, "prompts", id)); }
                 } catch (error) {
-                    console.error("Error al borrar el documento", error);
-                    alert("Ocurrió un error al intentar borrar.");
+                    console.error("Error al borrar", error); alert("Error al borrar.");
                 }
             }
         };
@@ -86,8 +84,9 @@
                         nombreOriginal: data.nombre,
                         inicial: null,
                         especializada: null,
+                        autoevaluacion: false,
                         primeraFecha: tiempoEnMilisegundos,
-                        docIds: [] // Guardamos los IDs de Firebase para poder borrarlos
+                        docIds: []
                     };
                 }
                 
@@ -100,6 +99,8 @@
                     }
                 } else if (data.tipo.includes("Especializada")) {
                     estudiantes[nombreClave].especializada = data.prompt;
+                } else if (data.tipo.includes("Autoevaluación")) {
+                    estudiantes[nombreClave].autoevaluacion = true;
                 }
             });
 
@@ -110,29 +111,27 @@
                 const completado = est.especializada ? "completado" : "";
                 card.className = `card ${completado}`;
 
-                // Botón de borrar integrado en la tarjeta
-                let html = `<button class="btn-borrar" onclick="borrarTablero('${est.docIds.join(',')}')" title="Borrar los envíos de este estudiante">🗑️ Borrar</button>`;
+                let html = `<button class="btn-borrar" onclick="borrarTablero('${est.docIds.join(',')}')" title="Borrar datos">🗑️ Borrar</button>`;
                 html += `<div class="nombre">👤 ${est.nombreOriginal}</div>`;
 
-                html += `<div class="seccion-prompt">
-                            <div class="tipo" style="color: #fca5a5;">🎯 Prompt Inicial Básico</div>`;
-                if (est.inicial) {
-                    html += `<div class="prompt">"${est.inicial}"</div>`;
-                } else {
-                    html += `<div class="prompt" style="opacity: 0.5;">(Aún no enviado)</div>`;
-                }
+                html += `<div class="seccion-prompt"><div class="tipo" style="color: #fca5a5;">🎯 Prompt Inicial Básico</div>`;
+                if (est.inicial) html += `<div class="prompt">"${est.inicial}"</div>`;
+                else html += `<div class="prompt" style="opacity: 0.5;">(Aún no enviado)</div>`;
                 html += `</div>`;
 
                 html += `<div style="border-top: 1px dashed rgba(255,255,255,0.2); margin: 15px 0;"></div>`;
 
-                html += `<div class="seccion-prompt" style="margin-bottom:0;">
-                            <div class="tipo" style="color: #38bdf8;">✨ Prompt Completo (Metodología)</div>`;
-                if (est.especializada) {
-                    html += `<div class="prompt">"${est.especializada}"</div>`;
-                } else {
-                    html += `<div class="prompt" style="opacity: 0.5;">(Esperando desarrollo...)</div>`;
-                }
+                html += `<div class="seccion-prompt" style="margin-bottom:0;"><div class="tipo" style="color: #38bdf8;">✨ Prompt Completo (Metodología)</div>`;
+                if (est.especializada) html += `<div class="prompt">"${est.especializada}"</div>`;
+                else html += `<div class="prompt" style="opacity: 0.5;">(Esperando desarrollo...)</div>`;
                 html += `</div>`;
+
+                // ETIQUETA DE AUTOEVALUACIÓN
+                if (est.autoevaluacion) {
+                    html += `<div class="etiqueta-estado estado-ok">✅ Autoevaluación Completada</div>`;
+                } else {
+                    html += `<div class="etiqueta-estado estado-espera">⏳ Autoevaluación en espera...</div>`;
+                }
 
                 card.innerHTML = html;
                 contenedor.appendChild(card);
