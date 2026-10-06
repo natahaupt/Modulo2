@@ -30,23 +30,18 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        // 🔴🔴🔴 PEGUE AQUÍ SU FIREBASE CONFIG 🔴🔴🔴
-  const firebaseConfig = {
-    apiKey: "AIzaSyA-bFIpc8iRrpmxKh8ih6spxQVytBmFw3I",
-    authDomain: "cepies-claro.firebaseapp.com",
-    projectId: "cepies-claro",
-    storageBucket: "cepies-claro.firebasestorage.app",
-    messagingSenderId: "448149004343",
-    appId: "1:448149004343:web:038ff270958e703e7f9fb2",
-    measurementId: "G-RDYHRK9LDT"
-};
-
-        // 🔴🔴🔴 FIN DEL CONFIG 🔴🔴🔴
+        const firebaseConfig = {
+            apiKey: "AIzaSyA-bFIpc8iRrpmxKh8ih6spxQVytBmFw3I",
+            authDomain: "cepies-claro.firebaseapp.com",
+            projectId: "cepies-claro",
+            storageBucket: "cepies-claro.firebasestorage.app",
+            messagingSenderId: "448149004343",
+            appId: "1:448149004343:web:038ff270958e703e7f9fb2",
+            measurementId: "G-RDYHRK9LDT"
+        };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-
-        // Pedimos los datos ordenados por fecha
         const q = query(collection(db, "prompts"), orderBy("timestamp", "asc"));
         
         onSnapshot(q, (snapshot) => {
@@ -58,38 +53,43 @@
                 return;
             }
 
-            // Objeto para agrupar los prompts por estudiante
             const estudiantes = {};
 
             snapshot.forEach((doc) => {
                 const data = doc.data();
-                // Usamos el nombre en minúsculas para agrupar sin importar si usan mayúsculas
                 const nombreClave = data.nombre.trim().toLowerCase();
+                const tiempoEnMilisegundos = data.timestamp ? data.timestamp.toMillis() : Date.now();
 
                 if (!estudiantes[nombreClave]) {
                     estudiantes[nombreClave] = {
                         nombreOriginal: data.nombre,
                         inicial: null,
-                        especializada: null
+                        especializada: null,
+                        primeraFecha: tiempoEnMilisegundos // Guarda la fecha de la primera interacción
                     };
                 }
 
                 if (data.tipo.includes("Inicial")) {
                     estudiantes[nombreClave].inicial = data.prompt;
+                    // Asegurar que la primera fecha sea la del prompt inicial
+                    if (tiempoEnMilisegundos < estudiantes[nombreClave].primeraFecha) {
+                        estudiantes[nombreClave].primeraFecha = tiempoEnMilisegundos;
+                    }
                 } else if (data.tipo.includes("Especializada")) {
                     estudiantes[nombreClave].especializada = data.prompt;
                 }
             });
 
-            // Dibujar las tarjetas agrupadas
-            Object.values(estudiantes).forEach(est => {
+            // Convertir a lista y ordenar ESTRICTAMENTE por la fecha del primer envío (el prompt básico)
+            const listaOrdenada = Object.values(estudiantes).sort((a, b) => a.primeraFecha - b.primeraFecha);
+
+            listaOrdenada.forEach(est => {
                 const card = document.createElement("div");
                 const completado = est.especializada ? "completado" : "";
                 card.className = `card ${completado}`;
 
                 let html = `<div class="nombre">👤 ${est.nombreOriginal}</div>`;
 
-                // Bloque del Prompt Inicial
                 html += `<div class="seccion-prompt">
                             <div class="tipo" style="color: #fca5a5;">🎯 Prompt Inicial Básico</div>`;
                 if (est.inicial) {
@@ -99,10 +99,8 @@
                 }
                 html += `</div>`;
 
-                // Línea separadora
                 html += `<div style="border-top: 1px dashed rgba(255,255,255,0.2); margin: 15px 0;"></div>`;
 
-                // Bloque del Prompt Completo
                 html += `<div class="seccion-prompt" style="margin-bottom:0;">
                             <div class="tipo" style="color: #38bdf8;">✨ Prompt Completo (Metodología)</div>`;
                 if (est.especializada) {
