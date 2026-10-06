@@ -30,14 +30,14 @@
         .seccion-prompt { margin-bottom: 15px; }
         .btn-borrar { position: absolute; top: 15px; right: 15px; background: rgba(234, 32, 39, 0.1); border: 1px solid #EA2027; color: #fca5a5; border-radius: 6px; cursor: pointer; padding: 6px 10px; font-size: 0.85rem; font-weight: bold; transition: 0.3s; }
         .btn-borrar:hover { background: #EA2027; color: #fff; }
-        .etiqueta-estado { text-align: center; font-size: 0.9rem; font-weight: bold; padding: 8px; border-radius: 6px; margin-top: 15px; }
+        .etiqueta-estado { font-size: 0.9rem; padding: 12px; border-radius: 6px; margin-top: 15px; line-height: 1.4; }
         .estado-ok { color: #4ade80; background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.3); }
-        .estado-espera { color: #94a3b8; background: rgba(255, 255, 255, 0.05); border: 1px dashed rgba(255, 255, 255, 0.2); }
+        .estado-espera { color: #94a3b8; background: rgba(255, 255, 255, 0.05); border: 1px dashed rgba(255, 255, 255, 0.2); text-align: center; font-weight: bold; }
 
         /* TABLA DE RÚBRICA POR COMPETENCIAS */
         .tabla-contenedor { overflow-x: auto; background: #1e293b; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); padding: 1px; }
         table { width: 100%; min-width: 1000px; border-collapse: collapse; text-align: left; }
-        th { background: #0f172a; color: #38bdf8; padding: 12px 10px; font-size: 0.95rem; border-bottom: 2px solid rgba(255,255,255,0.1); line-height: 1.3; }
+        th { background: #0f172a; color: #38bdf8; padding: 12px 10px; font-size: 0.95rem; border-bottom: 2px solid rgba(255,255,255,0.1); line-height: 1.3; cursor: help; }
         th span { display: block; font-size: 0.75rem; color: #94a3b8; font-weight: normal; margin-top: 3px; }
         td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #e2e8f0; vertical-align: middle; }
         tr:hover { background: rgba(255,255,255,0.02); }
@@ -75,11 +75,11 @@
                     <tr>
                         <th style="width: 15%;">Estudiante</th>
                         <th style="width: 8%;">Estado</th>
-                        <th title="Saber: Comprende la lógica de la metodología y la IA">Comprensión <span>(Saber)</span></th>
-                        <th title="Saber Hacer: Redacta y estructura prompts con precisión">Escritura <span>(Saber Hacer)</span></th>
-                        <th title="Saber Ser: Se involucra y participa en la dinámica">Participación <span>(Saber Ser)</span></th>
-                        <th title="Saber Ser: Cumple con los tiempos establecidos">Puntualidad <span>(Saber Ser)</span></th>
-                        <th title="Innovación: Explora más allá de lo básico, propone ideas">Curiosidad <span>(Transformar)</span></th>
+                        <th title="¿Demuestra comprender y aplicar los 5 elementos de C.L.A.R.O.?">1. Metodología <span>(Saber)</span></th>
+                        <th title="¿Su instrucción especializada es precisa, coherente y sin contradicciones?">2. Precisión <span>(Saber Hacer)</span></th>
+                        <th title="¿Hay un salto de calidad claro entre su prompt básico y el especializado?">3. Evolución <span>(Saber Hacer)</span></th>
+                        <th title="¿La justificación de su autoevaluación es honesta, crítica y madura?">4. Autocrítica <span>(Saber Ser)</span></th>
+                        <th title="¿Envió su imagen al grupo? ¿Mostró curiosidad y creatividad?">5. Participación <span>(Decidir/Innovar)</span></th>
                         <th style="width: 10%; text-align: center;">Total (25)</th>
                     </tr>
                 </thead>
@@ -88,7 +88,7 @@
                 </tbody>
             </table>
         </div>
-        <p style="text-align: center; color: #64748b; font-size: 0.9rem; margin-top: 15px;">* Cada dimensión se evalúa sobre 5 puntos. Las notas calculadas se reinician al actualizar la página.</p>
+        <p style="text-align: center; color: #64748b; font-size: 0.9rem; margin-top: 15px;">* Pase el ratón sobre los títulos de la tabla para recordar qué evalúa cada criterio. (Las notas se borran al recargar la página).</p>
     </div>
 
     <!-- SCRIPT PRINCIPAL Y FIREBASE -->
@@ -139,13 +139,10 @@
 
         // Calcular la nota final en base a las 5 competencias
         window.calcularNota = function(idFila) {
-            const val1 = parseInt(document.getElementById(`c1_${idFila}`).value) || 0;
-            const val2 = parseInt(document.getElementById(`c2_${idFila}`).value) || 0;
-            const val3 = parseInt(document.getElementById(`c3_${idFila}`).value) || 0;
-            const val4 = parseInt(document.getElementById(`c4_${idFila}`).value) || 0;
-            const val5 = parseInt(document.getElementById(`c5_${idFila}`).value) || 0;
-            
-            const total = val1 + val2 + val3 + val4 + val5;
+            let total = 0;
+            for(let i=1; i<=5; i++) {
+                total += parseInt(document.getElementById(`c${i}_${idFila}`).value) || 0;
+            }
             document.getElementById(`total_${idFila}`).innerText = total + " / 25";
         };
 
@@ -157,13 +154,12 @@
             
             contenedor.innerHTML = ""; 
             
-            // Solo limpiamos la tabla si realmente no hay nadie, para no borrar las notas que el docente ya ingresó
+            // Solo limpiamos la tabla si realmente no hay nadie
             if (snapshot.empty) {
                 contenedor.innerHTML = '<p style="text-align:center; width:100%; color:#94a3b8;">Esperando las respuestas de los estudiantes...</p>';
                 cuerpoTabla.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#94a3b8;">Esperando estudiantes...</td></tr>';
                 return;
             } else {
-                // Quitamos el mensaje de "esperando" de la tabla si existe
                 if(cuerpoTabla.innerHTML.includes("Esperando estudiantes")) {
                     cuerpoTabla.innerHTML = "";
                 }
@@ -182,6 +178,7 @@
                         inicial: null,
                         especializada: null,
                         autoevaluacion: false,
+                        autoEvalTexto: "",
                         primeraFecha: tiempoEnMilisegundos,
                         docIds: [],
                         idLimpio: nombreClave.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '') 
@@ -199,14 +196,15 @@
                     estudiantes[nombreClave].especializada = data.prompt;
                 } else if (data.tipo.includes("Autoevaluación")) {
                     estudiantes[nombreClave].autoevaluacion = true;
+                    estudiantes[nombreClave].autoEvalTexto = data.prompt; // Guarda la reflexión del alumno
                 }
             });
 
             const listaOrdenada = Object.values(estudiantes).sort((a, b) => a.primeraFecha - b.primeraFecha);
 
-            // Opciones de calificación
+            // Opciones de calificación según Rúbrica
             const opcionesSelect = `
-                <option value="0">0 - No aplica</option>
+                <option value="0">0 - Sin evidencia</option>
                 <option value="1">1 - Deficiente</option>
                 <option value="2">2 - Regular</option>
                 <option value="3">3 - Bueno</option>
@@ -214,7 +212,6 @@
                 <option value="5" selected>5 - Excelente</option>
             `;
 
-            // Mantener un registro de los alumnos que siguen existiendo en la base de datos
             const alumnosActuales = [];
 
             listaOrdenada.forEach(est => {
@@ -244,7 +241,11 @@
 
                 let estadoBadge = "";
                 if (est.autoevaluacion) {
-                    html += `<div class="etiqueta-estado estado-ok">✅ Autoevaluación Completada</div>`;
+                    // Muestra la reflexión del estudiante para que la profesora pueda leerla y calificar
+                    html += `<div class="etiqueta-estado estado-ok">
+                                <strong>✅ Autoevaluación del alumno:</strong><br>
+                                <span style="font-size:0.85rem; font-weight:normal; font-style:italic;">"${est.autoEvalTexto}"</span>
+                             </div>`;
                     estadoBadge = `<span class="estado-badge bg-verde">Finalizado</span>`;
                 } else {
                     html += `<div class="etiqueta-estado estado-espera">⏳ Autoevaluación en espera...</div>`;
@@ -258,7 +259,6 @@
                 // ==========================================
                 let fila = document.getElementById(`fila_${est.idLimpio}`);
                 
-                // Si la fila no existe, la creamos
                 if(!fila) {
                     fila = document.createElement("tr");
                     fila.id = `fila_${est.idLimpio}`;
@@ -275,12 +275,11 @@
                     `;
                     cuerpoTabla.appendChild(fila);
                 } else {
-                    // Si la fila ya existe, SOLO actualizamos su botón de estado (por si pasó de En Proceso a Finalizado)
                     document.getElementById(`estado_${est.idLimpio}`).innerHTML = estadoBadge;
                 }
             });
 
-            // Limpiar de la tabla a los alumnos que hayan sido borrados de la base de datos
+            // Limpiar filas de alumnos que hayan sido borrados
             Array.from(cuerpoTabla.children).forEach(fila => {
                 if (fila.id && !alumnosActuales.includes(fila.id)) {
                     cuerpoTabla.removeChild(fila);
