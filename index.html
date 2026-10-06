@@ -115,7 +115,12 @@
         <!-- PASO 3 -->
         <div id="seccion3" class="section">
             <h2 class="titulo-seccion titulo-candice">Paso 3: La Metodología C.L.A.R.O.</h2>
-            <p style="text-align: center; margin-bottom: 2rem;">Esta es una metodología propia, creada especialmente para esta clase, que nos ayudará a estructurar prompts altamente precisos:</p>
+            <p style="text-align: center; margin-bottom: 1rem;">Esta es una metodología propia, creada especialmente para esta clase, que nos ayudará a estructurar prompts altamente precisos:</p>
+            
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <button class="btn btn-copiar" style="background:#475569; padding: 12px 25px; font-size: 1.15rem; border-radius: 50px; font-weight: bold;" onclick="descargarMetodologia()">📖 Saber más: Descargar Guía Completa C.L.A.R.O.</button>
+            </div>
+
             <div class="claro-grid">
                 <div class="claro-card"><div class="letra-globo color-c">C</div><div class="claro-titulo-card">Contexto</div><p class="claro-desc"><strong>¿Qué comparto y para qué?</strong><br>Ej. Adjunto mi foto para presentarme.</p></div>
                 <div class="claro-card"><div class="letra-globo color-l">L</div><div class="claro-titulo-card">Labor</div><p class="claro-desc"><strong>¿Qué debe hacer la IA?</strong><br>Ej. Transforma mi foto en estilo cartoon.</p></div>
@@ -238,23 +243,19 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        // 🔴🔴🔴 PEGUE AQUÍ SU FIREBASE CONFIG 🔴🔴🔴
-const firebaseConfig = {
-    apiKey: "AIzaSyA-bFIpc8iRrpmxKh8ih6spxQVytBmFw3I",
-    authDomain: "cepies-claro.firebaseapp.com",
-    projectId: "cepies-claro",
-    storageBucket: "cepies-claro.firebasestorage.app",
-    messagingSenderId: "448149004343",
-    appId: "1:448149004343:web:038ff270958e703e7f9fb2",
-    measurementId: "G-RDYHRK9LDT"
-};
-
-        // 🔴🔴🔴 FIN DEL CONFIG 🔴🔴🔴
+        const firebaseConfig = {
+            apiKey: "AIzaSyA-bFIpc8iRrpmxKh8ih6spxQVytBmFw3I",
+            authDomain: "cepies-claro.firebaseapp.com",
+            projectId: "cepies-claro",
+            storageBucket: "cepies-claro.firebasestorage.app",
+            messagingSenderId: "448149004343",
+            appId: "1:448149004343:web:038ff270958e703e7f9fb2",
+            measurementId: "G-RDYHRK9LDT"
+        };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Exponer función de envío al entorno global
         window.enviarPromptFirebase = async function(nombre, tipo, prompt) {
             try {
                 await addDoc(collection(db, "prompts"), {
@@ -279,12 +280,8 @@ const firebaseConfig = {
             let contenedor = document.getElementById(idContenedor);
             let textoLimpio = "";
             let parrafos = contenedor.getElementsByTagName('p');
-            for(let i=0; i<parrafos.length; i++){
-                textoLimpio += parrafos[i].innerText + "\n\n";
-            }
-            navigator.clipboard.writeText(textoLimpio.trim()).then(function() {
-                alert("¡Prompt copiado! Puedes pegarlo en ChatGPT.");
-            });
+            for(let i=0; i<parrafos.length; i++){ textoLimpio += parrafos[i].innerText + "\n\n"; }
+            navigator.clipboard.writeText(textoLimpio.trim()).then(function() { alert("¡Prompt copiado! Puedes pegarlo en ChatGPT."); });
         };
 
         window.mostrarSeccion = function(id) {
@@ -303,10 +300,7 @@ const firebaseConfig = {
             const texto = document.getElementById(textareaId).value.trim();
             if(!texto) { alert("Escriba su prompt primero."); return; }
             
-            if(window.enviarPromptFirebase) {
-                window.enviarPromptFirebase(nombre, tipo, texto);
-            }
-
+            if(window.enviarPromptFirebase) { window.enviarPromptFirebase(nombre, tipo, texto); }
             generarCanvas(textareaId, tipo, nombre, texto, (logoImg.complete && logoImg.naturalWidth > 0) ? logoImg : null);
         }
 
@@ -315,20 +309,16 @@ const firebaseConfig = {
         }
 
         function generarCanvas(textareaId, tipo, nombre, texto, logo) {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
+            const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
             const anchoCanvas = 900, margenExterior = 40, margenInterior = 40;
             const anchoTarjeta = anchoCanvas - (margenExterior * 2), maxWidthTexto = anchoTarjeta - (margenInterior * 2);
             const lineHeight = 38; 
             
             ctx.font = "24px 'Quicksand', sans-serif";
-            const palabras = texto.split(' ');
-            let lineas = [], lineaActual = '';
-
+            const palabras = texto.split(' '); let lineas = [], lineaActual = '';
             for(let n = 0; n < palabras.length; n++) {
                 let testLinea = lineaActual + palabras[n] + ' ';
-                if (ctx.measureText(testLinea).width > maxWidthTexto && n > 0) { lineas.push(lineaActual); lineaActual = palabras[n] + ' '; } 
-                else { lineaActual = testLinea; }
+                if (ctx.measureText(testLinea).width > maxWidthTexto && n > 0) { lineas.push(lineaActual); lineaActual = palabras[n] + ' '; } else { lineaActual = testLinea; }
             }
             lineas.push(lineaActual);
 
@@ -347,8 +337,7 @@ const firebaseConfig = {
                 ctx.save(); ctx.beginPath(); ctx.arc(logoX + logoSize/2, logoY + logoSize/2, logoSize/2, 0, Math.PI * 2, true); ctx.closePath(); ctx.clip(); ctx.drawImage(logo, logoX, logoY, logoSize, logoSize); ctx.restore();
             }
 
-            const startX = margenExterior + margenInterior;
-            let currentY = margenExterior + margenInterior + 20;
+            const startX = margenExterior + margenInterior; let currentY = margenExterior + margenInterior + 20;
 
             ctx.fillStyle = "#EA2027"; ctx.font = "400 38px 'Pacifico', cursive"; ctx.fillText(nombre, startX, currentY);
             currentY += 40; ctx.fillStyle = "#cbd5e1"; ctx.font = "bold 22px 'Quicksand', sans-serif"; ctx.fillText(tipo.toUpperCase(), startX, currentY);
@@ -356,18 +345,63 @@ const firebaseConfig = {
             currentY += 45; ctx.fillStyle = "#f8fafc"; ctx.font = "24px 'Quicksand', sans-serif";
             
             for(let i = 0; i < lineas.length; i++) { ctx.fillText(lineas[i], startX, currentY); currentY += lineHeight; }
-            
             currentY += 20; ctx.fillStyle = "#64748b"; ctx.font = "italic 18px 'Quicksand', sans-serif"; ctx.fillText("Módulo 3: Evaluación de Aprendizaje • Post Grado CEPIES", startX, currentY);
 
             const link = document.createElement('a'); link.download = tipo.replace(/ /g,"_") + "_" + nombre.replace(/ /g,"_") + ".jpg"; link.href = canvas.toDataURL("image/jpeg"); link.click();
-
-            if(textareaId === 'promptBasico') { setTimeout(() => { mostrarSeccion('seccion3'); }, 1000); } 
-            else { document.getElementById('btnIrAutoEval').classList.remove('hidden'); }
+            if(textareaId === 'promptBasico') { setTimeout(() => { mostrarSeccion('seccion3'); }, 1000); } else { document.getElementById('btnIrAutoEval').classList.remove('hidden'); }
         }
 
-        /* Lógica Paso 5: Autoevaluación */
+        /* Lógica para descargar la infografía extendida C.L.A.R.O. */
+        window.descargarMetodologia = function() {
+            const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
+            canvas.width = 900; canvas.height = 820; // Altura aumentada para el texto extendido
+            
+            ctx.fillStyle = "#0f172a"; ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.fillStyle = "#1e293b"; ctx.strokeStyle = "#3b82f6"; ctx.lineWidth = 3;
+            dibujarRectanguloRedondeado(ctx, 30, 30, 840, 760, 15);
+
+            if(logoImg && logoImg.complete && logoImg.naturalWidth > 0) { ctx.drawImage(logoImg, canvas.width - 140, 50, 80, 80); }
+
+            ctx.fillStyle = "#f8fafc"; ctx.font = "bold 34px 'Quicksand', sans-serif"; ctx.fillText("METODOLOGÍA C.L.A.R.O.", 60, 85);
+            ctx.fillStyle = "#38bdf8"; ctx.font = "italic 20px 'Quicksand', sans-serif"; ctx.fillText("Guía Avanzada para el Diseño de Prompts Educativos - CEPIES", 60, 120);
+
+            // Función interna para saltos de línea automáticos del texto extendido
+            function wrapText(context, text, x, y, maxWidth, lineHeight) {
+                let words = text.split(' '); let line = '';
+                for(let n = 0; n < words.length; n++) {
+                    let testLine = line + words[n] + ' ';
+                    if (context.measureText(testLine).width > maxWidth && n > 0) {
+                        context.fillText(line, x, y); line = words[n] + ' '; y += lineHeight;
+                    } else { line = testLine; }
+                }
+                context.fillText(line, x, y); return y + lineHeight;
+            }
+
+            let cy = 190;
+            const pasos = [
+                { l: "C", t: "CONTEXTO", d: "Describe el escenario, los antecedentes y el propósito. Proporciona a la IA la información de fondo: ¿Para qué necesitas esto y en qué situación te encuentras?" },
+                { l: "L", t: "LABOR (Tarea)", d: "Define la acción principal de forma clara y directa. Usa verbos en imperativo exactos (ej. resume, redacta, analiza, transforma, diseña)." },
+                { l: "A", t: "AUDIENCIA", d: "Especifica a quién va dirigido el resultado final. Determina el tono (formal, amigable, académico), el nivel de conocimiento y el estilo adecuado." },
+                { l: "R", t: "REQUISITOS", d: "Establece reglas claras, límites y restricciones. Indica qué información debe incluirse obligatoriamente y qué cosas debe evitar hacer la IA." },
+                { l: "O", t: "OUTPUT (Formato)", d: "Indica el formato exacto de entrega. ¿Quieres una tabla comparativa, una lista con viñetas, código fuente, un párrafo corto o una imagen?" }
+            ];
+            const colores = ["#ff4757", "#2ed573", "#1e90ff", "#ffa502", "#9b59b6"];
+
+            for(let i=0; i<pasos.length; i++) {
+                ctx.fillStyle = colores[i]; ctx.font = "bold 40px 'Fredoka One', cursive"; ctx.fillText(pasos[i].l, 60, cy);
+                ctx.fillStyle = "#38bdf8"; ctx.font = "bold 24px 'Quicksand', sans-serif"; ctx.fillText(pasos[i].t, 115, cy - 5);
+                ctx.fillStyle = "#cbd5e1"; ctx.font = "18px 'Quicksand', sans-serif"; 
+                cy = wrapText(ctx, pasos[i].d, 115, cy + 25, 710, 26);
+                cy += 25; // Espacio entre letras
+            }
+
+            ctx.fillStyle = "#fca5a5"; ctx.font = "bold 18px 'Quicksand', sans-serif"; ctx.fillText("¡Guarda esta guía estructurada para tus futuros diseños de prompts docentes!", 60, 755);
+            
+            const link = document.createElement('a'); link.download = "Guia_Avanzada_CLARO_CEPIES.jpg"; link.href = canvas.toDataURL("image/jpeg"); link.click();
+        }
+
+        /* Lógica Paso 5: Autoevaluación y Retroalimentación */
         let puntajes = { q1: -1, q2: -1, q3: -1 };
-        
         window.seleccionarOpcion = function(grupo, valor) {
             puntajes[grupo] = valor;
             const opciones = document.getElementById(grupo).getElementsByClassName('option-box');
@@ -382,20 +416,31 @@ const firebaseConfig = {
             const reflexion = document.getElementById('reflexionTexto').value.trim() || "Sin reflexión escrita.";
             const nombre = document.getElementById('nombres').value.trim();
             
-            let evaluacionTexto = "Según mis respuestas, necesito ajustar mi instrucción.";
-            if(total >= 5) evaluacionTexto = "Según mis respuestas, alcancé el logro esperado.";
-            else if(total >= 3) evaluacionTexto = "Según mis respuestas, estoy en proceso de lograrlo.";
+            let evaluacionTexto = "Necesito seguir ajustando mi instrucción.";
+            if(total >= 5) evaluacionTexto = "¡Alcancé el logro esperado!";
+            else if(total >= 3) evaluacionTexto = "Estoy en proceso de lograrlo.";
+
+            let feedback = "";
+            if (puntajes.q1 < 2) feedback += "• Falta incorporar todos los elementos de la estructura C.L.A.R.O.\n";
+            if (puntajes.q2 < 2) feedback += "• Es necesario evitar contradicciones y ser más específico.\n";
+            if (puntajes.q3 < 2) feedback += "• Falta justificar claramente qué mejoró en tu nueva versión.\n";
+            if (total === 6) feedback = "¡Excelente trabajo! Tu prompt es claro, preciso y está bien estructurado.";
 
             const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
-            canvas.width = 800; canvas.height = 550;
+            canvas.width = 800; canvas.height = 620;
             
             ctx.fillStyle = "#0f172a"; ctx.fillRect(0,0,canvas.width,canvas.height);
             ctx.fillStyle = "#1e293b"; ctx.strokeStyle = "#3b82f6"; ctx.lineWidth = 3;
-            dibujarRectanguloRedondeado(ctx, 30, 30, 740, 490, 15);
+            dibujarRectanguloRedondeado(ctx, 30, 30, 740, 560, 15);
+
+            if(logoImg && logoImg.complete && logoImg.naturalWidth > 0) {
+                const logoSize = 80, logoX = canvas.width - 60 - logoSize, logoY = 50;
+                ctx.save(); ctx.beginPath(); ctx.arc(logoX + logoSize/2, logoY + logoSize/2, logoSize/2, 0, Math.PI * 2, true); ctx.closePath(); ctx.clip(); ctx.drawImage(logoImg, logoX, logoY, logoSize, logoSize); ctx.restore();
+            }
 
             let cy = 80; const cx = 60;
             ctx.fillStyle = "#f8fafc"; ctx.font = "bold 20px 'Quicksand', sans-serif"; ctx.fillText("AUTOEVALUACIÓN DE MI METODOLOGÍA", cx, cy);
-            cy += 40; ctx.fillStyle = "#fca5a5"; ctx.font = "bold 28px 'Quicksand', sans-serif"; ctx.fillText("Prueba de la tarjeta", cx, cy);
+            cy += 40; ctx.fillStyle = "#fca5a5"; ctx.font = "bold 28px 'Quicksand', sans-serif"; ctx.fillText("Reporte de Resultados", cx, cy);
             cy += 45; ctx.fillStyle = "#38bdf8"; ctx.font = "bold 24px 'Quicksand', sans-serif"; ctx.fillText(`Mi valoración: ${total} / 6`, cx, cy);
             cy += 35; ctx.fillStyle = "#f8fafc"; ctx.font = "20px 'Quicksand', sans-serif"; ctx.fillText(evaluacionTexto, cx, cy);
             
@@ -405,15 +450,19 @@ const firebaseConfig = {
             cy += 45; ctx.fillStyle = "#38bdf8"; ctx.font = "bold 16px 'Quicksand', sans-serif"; ctx.fillText("MI REFLEXIÓN", cx, cy);
             cy += 25; ctx.fillStyle = "#f8fafc"; ctx.font = "18px 'Quicksand', sans-serif"; ctx.fillText(reflexion, cx, cy);
 
-            cy += 50; ctx.fillStyle = "#38bdf8"; ctx.font = "bold 16px 'Quicksand', sans-serif"; ctx.fillText("MI SIGUIENTE PASO", cx, cy);
-            cy += 25; ctx.fillStyle = "#f8fafc"; ctx.font = "18px 'Quicksand', sans-serif"; ctx.fillText("Revisa el estilo, detalles y formato. Resuelve contradicciones.", cx, cy);
+            cy += 50; ctx.fillStyle = "#fca5a5"; ctx.font = "bold 16px 'Quicksand', sans-serif"; ctx.fillText("RETROALIMENTACIÓN DOCENTE", cx, cy);
+            cy += 25; ctx.fillStyle = "#f8fafc"; ctx.font = "18px 'Quicksand', sans-serif"; 
             
-            cy += 50; ctx.fillStyle = "#94a3b8"; ctx.font = "14px 'Quicksand', sans-serif"; 
-            ctx.fillText("Autoevaluación personal. Contrastar con el prompt y valoración docente.", cx, cy);
-            cy += 20; ctx.fillText(`${nombre} • Módulo 3 - CEPIES`, cx, cy);
+            const lineasFeedback = feedback.split('\n');
+            for(let i=0; i<lineasFeedback.length; i++) {
+                if(lineasFeedback[i].trim() !== "") { ctx.fillText(lineasFeedback[i], cx, cy); cy += 25; }
+            }
+            
+            cy += 30; ctx.fillStyle = "#94a3b8"; ctx.font = "14px 'Quicksand', sans-serif"; 
+            ctx.fillText(`${nombre} • Módulo 3 - CEPIES`, cx, cy);
 
             const link = document.createElement('a'); link.download = `Autoevaluacion_${nombre.replace(/ /g,"_")}.jpg`; link.href = canvas.toDataURL("image/jpeg"); link.click();
-            alert("¡Su tarjeta de autoevaluación se ha descargado!");
+            alert("¡Su reporte de autoevaluación se ha descargado!");
         };
     </script>
 </body>
