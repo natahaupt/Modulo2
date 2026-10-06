@@ -30,6 +30,7 @@
         label { display: block; font-weight: 700; margin-bottom: 0.8rem; color: #e2e8f0; font-size: 1.2rem; }
         input[type="text"], textarea { width: 100%; padding: 16px; background: rgba(15, 23, 42, 0.6); border: 2px solid rgba(255, 255, 255, 0.1); color: #fff; border-radius: 12px; box-sizing: border-box; font-family: 'Quicksand', sans-serif; font-size: 1.1rem; transition: all 0.3s ease; }
         input[type="text"]:focus, textarea:focus { outline: none; border-color: var(--azul-brillante); box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); background: rgba(15, 23, 42, 0.9); }
+        input[type="text"]:disabled { background: rgba(255, 255, 255, 0.05); color: #94a3b8; cursor: not-allowed; border-color: rgba(255, 255, 255, 0.05); }
         textarea { resize: vertical; min-height: 140px; line-height: 1.5; }
 
         .btn { background: var(--rojo-cepies); color: var(--blanco); border: none; padding: 16px 28px; font-family: 'Quicksand', sans-serif; font-size: 1.2rem; font-weight: 700; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; display: block; text-align: center; width: 100%; box-sizing: border-box; box-shadow: 0 8px 20px rgba(234, 32, 39, 0.2); margin-top: 15px; }
@@ -74,6 +75,13 @@
         .option-box strong { display: block; margin-bottom: 5px; font-size: 1.1rem; }
         .option-box p { margin: 0; font-size: 0.9rem; color: #cbd5e1; }
         @media(max-width: 768px) { .options-grid { grid-template-columns: 1fr; } }
+
+        /* NUEVO MODAL A PRUEBA DE WHATSAPP */
+        .modal-oculto { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); backdrop-filter: blur(5px); overflow: auto; }
+        .modal-contenido { background-color: #1e293b; margin: 5% auto; padding: 25px; border: 1px solid #3b82f6; border-radius: 20px; width: 90%; max-width: 500px; text-align: center; box-shadow: 0 0 30px rgba(59, 130, 246, 0.4); position: relative; }
+        .cerrar-modal { color: #cbd5e1; position: absolute; right: 20px; top: 15px; font-size: 32px; font-weight: bold; cursor: pointer; line-height: 1; }
+        .cerrar-modal:hover { color: #fff; }
+        #imagenGenerada { width: 100%; border-radius: 12px; margin-top: 15px; border: 2px solid rgba(255,255,255,0.1); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
     </style>
 </head>
 <body>
@@ -95,7 +103,7 @@
                 <label for="nombres">Escriba su nombre y apellido:</label>
                 <input type="text" id="nombres" placeholder="Ej. Mariela Limachi" oninput="guardarDatosLocales()" onkeypress="if(event.key === 'Enter') validarPaso1();">
             </div>
-            <button class="btn btn-blue" onclick="validarPaso1()">Comenzar actividad</button>
+            <button id="btnPaso1" class="btn btn-blue" onclick="validarPaso1()">Comenzar actividad</button>
         </div>
 
         <!-- PASO 2 -->
@@ -111,7 +119,7 @@
                 <img src="imagen0.png" alt="Ejemplo de resultado rápido" class="img-ejemplo-prompt" onerror="this.src='imagen0.jpg';">
             </div>
             <button class="btn" onclick="prepararDescarga('promptBasico', 'Instrucción Inicial')">
-                Descargar imagen para compartirla en el grupo del Diplomado con los demás colegas y docentes 🎓✨
+                Generar imagen para compartir en el grupo del Diplomado 🎓✨
             </button>
         </div>
 
@@ -121,7 +129,7 @@
             <p style="text-align: center; margin-bottom: 1rem;">Esta es una metodología propia, creada especialmente para esta clase, que nos ayudará a estructurar prompts altamente precisos:</p>
             
             <div style="text-align: center; margin-bottom: 2rem;">
-                <button class="btn btn-copiar" style="background:#475569; padding: 12px 25px; font-size: 1.15rem; border-radius: 50px; font-weight: bold;" onclick="descargarMetodologia()">📖 Saber más: Descargar Guía Completa C.L.A.R.O.</button>
+                <button class="btn btn-copiar" style="background:#475569; padding: 12px 25px; font-size: 1.15rem; border-radius: 50px; font-weight: bold;" onclick="descargarMetodologia()">📖 Saber más: Ver Guía Completa C.L.A.R.O.</button>
             </div>
 
             <div class="claro-grid">
@@ -172,7 +180,7 @@
                     
                     <button class="btn btn-volver" onclick="mostrarSeccion('seccion3')">👈 Repasar la Metodología</button>
                     <button class="btn" onclick="prepararDescarga('promptMejorado', 'Instrucción Especializada')">
-                        ¡Descargar mi progreso para compartirlo en el grupo del Diplomado! 🤝🚀
+                        Generar mi progreso para compartirlo en el grupo del Diplomado! 🤝🚀
                     </button>
                     
                     <!-- Botón oculto por defecto -->
@@ -232,7 +240,7 @@
 
             <div class="form-group">
                 <label>Mi reflexión (Completa: "Ahora precisé... para..." o "Todavía necesito mejorar...")</label>
-                <input type="text" id="reflexionTexto" maxlength="220" placeholder="Ej. Precisé el fondo para evitar contradicciones.">
+                <input type="text" id="reflexionTexto" maxlength="220" placeholder="Ej. Precisé el fondo para evitar contradicciones." oninput="guardarDatosLocales()">
             </div>
 
             <button class="btn btn-blue" onclick="generarTarjetaAutoEval()">Ver y Descargar mi Autoevaluación 📥</button>
@@ -243,6 +251,21 @@
             </div>
         </div>
 
+    </div>
+
+    <!-- ESTRUCTURA DEL MODAL DE IMÁGENES -->
+    <div id="modalImagen" class="modal-oculto">
+        <div class="modal-contenido">
+            <span class="cerrar-modal" onclick="cerrarModal()">&times;</span>
+            <h3 id="modalTitulo" style="color: #38bdf8; margin-top: 0; font-size: 1.5rem;">¡Tu imagen está lista! 🎉</h3>
+            <p id="modalDesc" style="color: #cbd5e1; font-size: 1.1rem; line-height: 1.4;">
+                <span style="font-size: 1.5rem;">👆</span><br>
+                <strong>Mantén presionada la imagen</strong> con tu dedo para <strong>Guardarla</strong> o <strong>Compartirla en WhatsApp</strong>.
+            </p>
+            <img id="imagenGenerada" src="" alt="Generando...">
+            <button class="btn btn-blue" style="margin-top: 20px; font-size: 1rem; padding: 10px;" onclick="descargarDesdeModal()">Intentar descarga automática 📥</button>
+            <button id="btnContinuarModal" class="btn" style="background: #EA2027; margin-top: 10px;" onclick="cerrarModal()">Continuar 👉</button>
+        </div>
     </div>
 
     <!-- SCRIPT PRINCIPAL Y FIREBASE -->
@@ -283,7 +306,33 @@
         logoImg.crossOrigin = "anonymous";
         logoImg.src = "logo-cepies.jpg";
 
-        // FUNCIONES DE GUARDADO Y MEMORIA LOCAL
+        // ---- LÓGICA DE MEMORIA SEGURA ----
+        document.addEventListener("DOMContentLoaded", function() {
+            const pasoGuardado = localStorage.getItem('cepies_paso');
+            const nomGuardado = localStorage.getItem('cepies_nombre');
+            const pBasico = localStorage.getItem('cepies_pBasico');
+            const pMejorado = localStorage.getItem('cepies_pMejorado');
+            
+            if(nomGuardado) {
+                const inputNombre = document.getElementById('nombres');
+                inputNombre.value = nomGuardado;
+                inputNombre.disabled = true; 
+                document.getElementById('btnPaso1').innerText = "Continuar";
+            }
+
+            if(pBasico) document.getElementById('promptBasico').value = pBasico;
+            if(pMejorado) document.getElementById('promptMejorado').value = pMejorado;
+
+            if(pasoGuardado && pasoGuardado !== 'seccion1') {
+                mostrarSeccion(pasoGuardado);
+                if(pMejorado && localStorage.getItem('cepies_btnDescubierto')) {
+                    document.getElementById('btnIrAutoEval').classList.remove('hidden');
+                }
+            } else if (nomGuardado) {
+                mostrarSeccion('seccion2');
+            }
+        });
+
         window.guardarDatosLocales = function() {
             localStorage.setItem('cepies_nombre', document.getElementById('nombres').value);
             localStorage.setItem('cepies_pBasico', document.getElementById('promptBasico').value);
@@ -291,19 +340,11 @@
         }
 
         window.reiniciarActividad = function() {
-            if(confirm("¿Seguro que desea finalizar? Esto borrará sus datos de este navegador.")) {
+            if(confirm("¿Seguro que desea finalizar? Esto borrará sus datos de este celular/PC.")) {
                 localStorage.clear();
                 location.reload();
             }
         }
-
-        window.copiarTexto = function(idContenedor) {
-            let contenedor = document.getElementById(idContenedor);
-            let textoLimpio = "";
-            let parrafos = contenedor.getElementsByTagName('p');
-            for(let i=0; i<parrafos.length; i++){ textoLimpio += parrafos[i].innerText + "\n\n"; }
-            navigator.clipboard.writeText(textoLimpio.trim()).then(function() { alert("¡Prompt copiado! Puedes pegarlo en ChatGPT."); });
-        };
 
         window.mostrarSeccion = function(id) {
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
@@ -318,38 +359,60 @@
             mostrarSeccion('seccion2');
         }
 
+        // ---- LÓGICA DEL MODAL DE IMÁGENES ----
+        let accionPostModal = null;
+        let nombreArchivoDescarga = "Imagen.jpg";
+
+        window.mostrarModalImagen = function(canvas, titulo, desc, accionSiguiente, nombreArchivo) {
+            try {
+                const dataUrl = canvas.toDataURL("image/jpeg");
+                document.getElementById("imagenGenerada").src = dataUrl;
+                document.getElementById("modalTitulo").innerHTML = titulo;
+                document.getElementById("modalDesc").innerHTML = desc;
+                nombreArchivoDescarga = nombreArchivo;
+                accionPostModal = accionSiguiente;
+                document.getElementById("modalImagen").style.display = "block";
+            } catch (e) {
+                console.error(e);
+                alert("Hubo un error, pero sus datos se guardaron. Puede continuar.");
+                if(accionSiguiente) accionSiguiente();
+            }
+        }
+
+        window.cerrarModal = function() {
+            document.getElementById("modalImagen").style.display = "none";
+            if(accionPostModal) {
+                let tempAccion = accionPostModal;
+                accionPostModal = null;
+                tempAccion();
+            }
+        }
+
+        window.descargarDesdeModal = function() {
+            const link = document.createElement('a'); 
+            link.download = nombreArchivoDescarga; 
+            link.href = document.getElementById("imagenGenerada").src; 
+            link.click();
+        }
+
         window.prepararDescarga = function(textareaId, tipo) {
             const nombre = document.getElementById('nombres').value.trim();
             const texto = document.getElementById(textareaId).value.trim();
             if(!texto) { alert("Escriba su prompt primero."); return; }
             
             guardarDatosLocales();
-
             if(window.enviarPromptFirebase) { window.enviarPromptFirebase(nombre, tipo, texto); }
             generarCanvas(textareaId, tipo, nombre, texto, (logoImg.complete && logoImg.naturalWidth > 0) ? logoImg : null);
         }
 
-        // Recuperar memoria AL INSTANTE (Sin esperar a que cargue todo)
-        (function recuperarMemoriaInmediata() {
-            const pasoGuardado = localStorage.getItem('cepies_paso');
-            const nomGuardado = localStorage.getItem('cepies_nombre');
-            const pBasico = localStorage.getItem('cepies_pBasico');
-            const pMejorado = localStorage.getItem('cepies_pMejorado');
-            
-            if(nomGuardado) document.getElementById('nombres').value = nomGuardado;
-            if(pBasico) document.getElementById('promptBasico').value = pBasico;
-            if(pMejorado) document.getElementById('promptMejorado').value = pMejorado;
+        window.copiarTexto = function(idContenedor) {
+            let contenedor = document.getElementById(idContenedor);
+            let textoLimpio = "";
+            let parrafos = contenedor.getElementsByTagName('p');
+            for(let i=0; i<parrafos.length; i++){ textoLimpio += parrafos[i].innerText + "\n\n"; }
+            navigator.clipboard.writeText(textoLimpio.trim()).then(function() { alert("¡Prompt copiado! Puedes pegarlo en ChatGPT."); });
+        };
 
-            if(pasoGuardado && pasoGuardado !== 'seccion1') {
-                mostrarSeccion(pasoGuardado);
-                // Muestra el botón de auto-evaluación si ya pasaron el paso 4
-                if(pMejorado && localStorage.getItem('cepies_btnDescubierto')) {
-                    document.getElementById('btnIrAutoEval').classList.remove('hidden');
-                }
-            }
-        })();
-
-        // FUNCIONES DE DISEÑO (Canvas)
         function dibujarRectanguloRedondeado(ctx, x, y, ancho, alto, radio) {
             ctx.beginPath(); ctx.moveTo(x + radio, y); ctx.lineTo(x + ancho - radio, y); ctx.quadraticCurveTo(x + ancho, y, x + ancho, y + radio); ctx.lineTo(x + ancho, y + alto - radio); ctx.quadraticCurveTo(x + ancho, y + alto, x + ancho - radio, y + alto); ctx.lineTo(x + radio, y + alto); ctx.quadraticCurveTo(x, y + alto, x, y + alto - radio); ctx.lineTo(x, y + radio); ctx.quadraticCurveTo(x, y, x + radio, y); ctx.closePath(); ctx.fill(); ctx.stroke();
         }
@@ -393,14 +456,20 @@
             for(let i = 0; i < lineas.length; i++) { ctx.fillText(lineas[i], startX, currentY); currentY += lineHeight; }
             currentY += 20; ctx.fillStyle = "#64748b"; ctx.font = "italic 18px 'Quicksand', sans-serif"; ctx.fillText("Módulo 3: Evaluación de Aprendizaje • Post Grado CEPIES", startX, currentY);
 
-            const link = document.createElement('a'); link.download = tipo.replace(/ /g,"_") + "_" + nombre.replace(/ /g,"_") + ".jpg"; link.href = canvas.toDataURL("image/jpeg"); link.click();
+            const nombreLimpio = nombre.replace(/ /g,"_");
+            const nombreArchivo = `${tipo.replace(/ /g,"_")}_${nombreLimpio}.jpg`;
             
+            let accion = null;
             if(textareaId === 'promptBasico') { 
-                setTimeout(() => { mostrarSeccion('seccion3'); }, 1000); 
+                accion = () => mostrarSeccion('seccion3'); 
             } else { 
-                document.getElementById('btnIrAutoEval').classList.remove('hidden'); 
-                localStorage.setItem('cepies_btnDescubierto', 'true');
+                accion = () => {
+                    document.getElementById('btnIrAutoEval').classList.remove('hidden'); 
+                    localStorage.setItem('cepies_btnDescubierto', 'true');
+                };
             }
+            
+            mostrarModalImagen(canvas, "¡Tu tarjeta está lista! 🎉", "<span style='font-size:2rem;'>👆</span><br><strong>Mantén presionada la imagen</strong> para guardarla en tu celular o compartirla.", accion, nombreArchivo);
         }
 
         window.descargarMetodologia = function() {
@@ -447,7 +516,7 @@
 
             ctx.fillStyle = "#fca5a5"; ctx.font = "bold 18px 'Quicksand', sans-serif"; ctx.fillText("¡Guarda esta guía estructurada para tus futuros diseños de prompts docentes!", 60, 755);
             
-            const link = document.createElement('a'); link.download = "Guia_Avanzada_CLARO_CEPIES.jpg"; link.href = canvas.toDataURL("image/jpeg"); link.click();
+            mostrarModalImagen(canvas, "Guía de Estudio 📖", "<span style='font-size:2rem;'>👆</span><br><strong>Mantén presionada la imagen</strong> para guardarla en tu celular.", null, "Guia_Metodologia_CEPIES.jpg");
         }
 
         let puntajes = { q1: -1, q2: -1, q3: -1 };
@@ -474,6 +543,11 @@
             if (puntajes.q2 < 2) feedback += "• Es necesario evitar contradicciones y ser más específico.\n";
             if (puntajes.q3 < 2) feedback += "• Falta justificar claramente qué mejoró en tu nueva versión.\n";
             if (total === 6) feedback = "¡Excelente trabajo! Tu prompt es claro, preciso y está bien estructurado.";
+
+            // 🔴 ENVIAR AVISO A FIREBASE DE QUE SE COMPLETÓ LA AUTOEVALUACIÓN
+            if(window.enviarPromptFirebase) {
+                window.enviarPromptFirebase(nombre, "Autoevaluación", `Puntaje: ${total}/6. Reflexión: ${reflexion}`);
+            }
 
             const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
             canvas.width = 800; canvas.height = 620;
@@ -510,8 +584,8 @@
             cy += 30; ctx.fillStyle = "#94a3b8"; ctx.font = "14px 'Quicksand', sans-serif"; 
             ctx.fillText(`${nombre} • Módulo 3 - CEPIES`, cx, cy);
 
-            const link = document.createElement('a'); link.download = `Autoevaluacion_${nombre.replace(/ /g,"_")}.jpg`; link.href = canvas.toDataURL("image/jpeg"); link.click();
-            alert("¡Su reporte de autoevaluación se ha descargado!");
+            const nombreLimpio = nombre.replace(/ /g,"_");
+            mostrarModalImagen(canvas, "¡Tu Autoevaluación! 🎓", "<span style='font-size:2rem;'>👆</span><br><strong>Mantén presionada la imagen</strong> para guardarla en tu dispositivo.", null, `Autoevaluacion_${nombreLimpio}.jpg`);
         };
     </script>
 </body>
