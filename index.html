@@ -69,13 +69,15 @@
             font-family: 'Quicksand', sans-serif;
         }
 
+        /* Contenedor expandido para aprovechar los lados */
         .container {
-            width: 90%;
-            max-width: 850px;
+            width: 95%;
+            max-width: 1500px;
             margin: 1rem auto 4rem;
             position: relative;
         }
 
+        /* Cajas centrales de Pasos 1, 2 y 3 */
         .section {
             background: rgba(30, 41, 59, 0.85);
             backdrop-filter: blur(12px);
@@ -86,6 +88,9 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.3);
             margin-bottom: 2rem;
             display: none;
+            max-width: 850px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .section.active {
@@ -236,38 +241,106 @@
             border-radius: 0 12px 12px 0;
         }
 
-        .prompt-ejemplo-item {
-            background: rgba(15, 23, 42, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 1.2rem;
-            border-radius: 12px;
-            margin-bottom: 15px;
-        }
-
-        .prompt-ejemplo-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .prompt-ejemplo-item h4 {
-            color: #fca5a5;
-            margin: 0 0 10px 0;
-            font-size: 1.2rem;
-            font-family: 'Quicksand', sans-serif;
-        }
-
-        .prompt-ejemplo-item p {
-            margin: 8px 0;
-            font-size: 1rem;
+        .checklist { list-style: none; padding: 0; margin: 0; }
+        .checklist li {
+            padding: 10px 0 10px 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            position: relative;
             color: #cbd5e1;
+            font-size: 1.1rem;
             line-height: 1.4;
         }
-
-        .prompt-ejemplo-item strong {
+        
+        .checklist li:before {
+            content: '✨';
             color: #38bdf8;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
         }
 
         .hidden { display: none; }
         .titulo-seccion { color: #fff; font-size: 2.2rem; margin-top: 0; margin-bottom: 1.5rem; text-align: center; }
+
+        /* ========= NUEVO DISEÑO 3 COLUMNAS (PASO 4) ========= */
+        
+        /* Quitamos el fondo principal al Paso 4 para que las 3 columnas resalten solas */
+        #seccion4 {
+            max-width: 100%;
+            background: transparent;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            border: none;
+            box-shadow: none;
+            padding: 0;
+        }
+
+        .paso4-layout {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap; /* Permite que se acomode en celulares */
+        }
+
+        /* Columna Izquierda y Derecha (Ejemplos 1 y 3) */
+        .col-lateral {
+            flex: 1;
+            min-width: 280px;
+            max-width: 400px;
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        /* Columna Central (Formulario y Ejemplo 2) */
+        .col-central {
+            flex: 2;
+            min-width: 320px;
+            max-width: 850px;
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .col-lateral h4, .prompt-ejemplo-item h4 {
+            color: #fca5a5;
+            margin: 0 0 15px 0;
+            font-size: 1.3rem;
+            font-family: 'Quicksand', sans-serif;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+
+        .col-lateral p, .prompt-ejemplo-item p {
+            margin: 12px 0;
+            font-size: 0.95rem;
+            color: #cbd5e1;
+            line-height: 1.5;
+            text-align: left;
+        }
+
+        .col-lateral strong, .prompt-ejemplo-item strong {
+            color: #38bdf8;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .prompt-ejemplo-item {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
     </style>
 </head>
 <body>
@@ -351,15 +424,15 @@
             <button class="btn btn-blue" onclick="mostrarSeccion('seccion4')">Entendido, redactar mi instrucción especializada</button>
         </div>
 
-        <!-- PASO 4 -->
+        <!-- PASO 4 (Nuevo Diseño 3 Columnas) -->
         <div id="seccion4" class="section">
-            <h2 class="titulo-seccion titulo-candice">Paso 4: Su Prompt Especializado</h2>
+            <h2 class="titulo-seccion titulo-candice" style="margin-bottom: 2rem; text-shadow: 0 4px 6px rgba(0,0,0,0.5);">Paso 4: Su Prompt Especializado</h2>
             
-            <div class="info-box">
-                <strong style="color: #fff; display: block; margin-bottom: 15px; font-size: 1.2rem;">🎨 3 Ejemplos de Prompts Súper Completos:</strong>
+            <div class="paso4-layout">
                 
-                <div class="prompt-ejemplo-item">
-                    <h4>Ejemplo 1: Estilo Anime Indie</h4>
+                <!-- COLUMNA IZQUIERDA: Ejemplo 1 -->
+                <div class="col-lateral">
+                    <h4>🎨 Ejemplo 1: Anime Indie</h4>
                     <p><strong>[C] CONTEXTO:</strong> Usa mi fotografía subida como única referencia. Quiero convertirla en una ilustración japonesa indie minimalista, manteniendo claramente mi identidad y apariencia.</p>
                     <p><strong>[L] LABOR:</strong> Transforma la foto en un retrato estilo anime doodle japonés: cabeza grande y redondeada, cuerpo pequeño, ojos mínimos, boca muy sutil, líneas dibujadas a mano en azul marino, colores pastel apagados, sombreado plano y textura suave de papel.</p>
                     <p><strong>[A] AUDIENCIA:</strong> La imagen será usada como retrato personal o foto de perfil. Debe transmitir calidez, ternura, calma y una estética acogedora y artística.</p>
@@ -367,41 +440,57 @@
                     <p><strong>[O] OUTPUT:</strong> Imagen cuadrada 1:1, una sola persona, composición limpia, ilustración 2D de alta calidad. Sin bordes, logos ni texto adicional aparte de la firma.</p>
                 </div>
 
-                <div class="prompt-ejemplo-item">
-                    <h4>Ejemplo 2: Estilo Doodle Kawaii</h4>
-                    <p><strong>[C] CONTEXTO:</strong> Usa la imagen subida como única referencia. Quiero transformar al sujeto en una ilustración doodle kawaii hecha a mano, inspirada en dibujos simples coreanos y japoneses de redes sociales.</p>
-                    <p><strong>[L] LABOR:</strong> Convierte la foto en un dibujo tierno y espontáneo, con líneas negras gruesas e irregulares, ojos mínimos, rasgos simples, formas redondeadas, proporciones ligeramente adorables, rubor rosado, colores pastel suaves y textura visible de lápiz, crayón o marcador.</p>
-                    <p><strong>[A] AUDIENCIA:</strong> La imagen será usada como ilustración personal o para redes sociales. Debe sentirse cálida, divertida, inocente, encantadora y emocionalmente expresiva.</p>
-                    <p><strong>[R] REQUISITOS:</strong> Conserva fielmente la identidad y rasgos reconocibles del sujeto. Si es una persona, respeta rostro, peinado, barba, cuerpo, ropa y colores. Si es un animal, conserva raza, pelaje, color, hocico, ojos y orejas. Mantén la pose y emoción originales. Fondo blanco o muy limpio, con bastante espacio vacío. Evita estilo anime, manga, 3D, hiperrealismo, acabado vectorial perfecto, exceso de detalle, fondos complejos o cambios de identidad.</p>
-                    <p><strong>[O] OUTPUT:</strong> Ilustración 2D limpia, equilibrada y de apariencia realmente dibujada a mano, como un doodle viral hecho rápidamente en un cuaderno.</p>
+                <!-- COLUMNA CENTRAL: Ejemplo 2 y Formulario -->
+                <div class="col-central">
+                    <div class="prompt-ejemplo-item">
+                        <h4>🎨 Ejemplo 2: Doodle Kawaii</h4>
+                        <p><strong>[C] CONTEXTO:</strong> Usa la imagen subida como única referencia. Quiero transformar al sujeto en una ilustración doodle kawaii hecha a mano, inspirada en dibujos simples coreanos y japoneses de redes sociales.</p>
+                        <p><strong>[L] LABOR:</strong> Convierte la foto en un dibujo tierno y espontáneo, con líneas negras gruesas e irregulares, ojos mínimos, rasgos simples, formas redondeadas, proporciones ligeramente adorables, rubor rosado, colores pastel suaves y textura visible de lápiz, crayón o marcador.</p>
+                        <p><strong>[A] AUDIENCIA:</strong> La imagen será usada como ilustración personal o para redes sociales. Debe sentirse cálida, divertida, inocente, encantadora y emocionalmente expresiva.</p>
+                        <p><strong>[R] REQUISITOS:</strong> Conserva fielmente la identidad y rasgos reconocibles del sujeto. Si es una persona, respeta rostro, peinado, barba, cuerpo, ropa y colores. Si es un animal, conserva raza, pelaje, color, hocico, ojos y orejas. Mantén la pose y emoción originales. Fondo blanco o muy limpio, con bastante espacio vacío. Evita estilo anime, manga, 3D, hiperrealismo, acabado vectorial perfecto, exceso de detalle, fondos complejos o cambios de identidad.</p>
+                        <p><strong>[O] OUTPUT:</strong> Ilustración 2D limpia, equilibrada y de apariencia realmente dibujada a mano, como un doodle viral hecho rápidamente en un cuaderno.</p>
+                    </div>
+
+                    <div class="info-box">
+                        <strong style="color: #fff; display: block; margin-bottom: 10px; font-size: 1.2rem;">💡 Siga estas directrices para el suyo:</strong>
+                        <ul class="checklist">
+                            <li><strong>[C] Contexto:</strong> Indique claramente que es su fotografía y el propósito.</li>
+                            <li><strong>[L] Labor:</strong> Especifique la acción y el estilo visual exacto.</li>
+                            <li><strong>[A] Audiencia:</strong> Mencione quién verá la imagen y qué emoción desea transmitir.</li>
+                            <li><strong>[R] Requisitos:</strong> Detalle todo lo que no quiere perder y lo que desea añadir.</li>
+                            <li><strong>[O] Output:</strong> Defina el formato exacto de entrega (ej. imagen cuadrada sin texto).</li>
+                        </ul>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="promptMejorado">Redacte su prompt especializado uniendo todos estos detalles:</label>
+                        <textarea id="promptMejorado" placeholder="Escriba aquí aplicando su propio estilo a cada punto..."></textarea>
+                    </div>
+                    
+                    <button class="btn btn-volver" onclick="mostrarSeccion('seccion3')">
+                        👈 Volver al cuadro C.L.A.R.O.
+                    </button>
+
+                    <!-- Botón de Descarga Paso 4 -->
+                    <button class="btn" onclick="prepararDescarga('promptMejorado', 'Instrucción Especializada')">
+                        Presione aquí para descargar su tarjeta final y, por favor, envíela al grupo de WhatsApp 💬😃
+                    </button>
+                    
+                    <div id="mensajeFinal" class="hidden" style="text-align: center; color: #38bdf8; font-size: 1.3rem; font-weight: bold; margin-top: 1.5rem;">
+                        ¡Excelente trabajo! Busque la imagen descargada en su dispositivo y compártala en el grupo.
+                    </div>
                 </div>
 
-                <div class="prompt-ejemplo-item">
-                    <h4>Ejemplo 3: Estilo Street Casual</h4>
+                <!-- COLUMNA DERECHA: Ejemplo 3 -->
+                <div class="col-lateral">
+                    <h4>🎨 Ejemplo 3: Street Casual</h4>
                     <p><strong>[C] CONTEXTO:</strong> Usa la imagen subida como referencia. Quiero transformarla en una ilustración japonesa simple, suelta y hecha a mano, con un estilo cálido, minimalista y con aire street casual.</p>
                     <p><strong>[L] LABOR:</strong> Convierte a la persona en un dibujo de cuerpo completo con líneas negras o marrón oscuro, ligeramente irregulares y naturales. Usa pocos colores, aplicados en capas planas, sin degradados ni brillo. Simplifica el rostro con ojos, nariz y boca muy pequeños, y dibuja el cabello con pocas líneas. La pose debe ser relajada, con ambas manos haciendo un gesto de paz, los codos ligeramente doblados, las manos a distinta altura y el cuerpo levemente inclinado.</p>
                     <p><strong>[A] AUDIENCIA:</strong> La imagen será usada como foto de perfil o ilustración personal. Debe transmitir una sensación relajada, simpática, sencilla y estilosa.</p>
                     <p><strong>[R] REQUISITOS:</strong> Mantén una estética de ilustración manual, simple y poco recargada. La ropa debe sentirse como street casual suelto y natural, con un aire relajado y moderno. Muestra a la persona completa, incluyendo ambas manos. Usa fondo blanco y deja bastante espacio vacío alrededor. Evita exceso de detalle, sombras complejas, degradados, brillo o acabado demasiado pulido.</p>
                     <p><strong>[O] OUTPUT:</strong> Imagen cuadrada tipo foto de perfil, con la figura completa centrada y bien equilibrada dentro de un encuadre circular, dejando márgenes amplios y una composición limpia.</p>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label for="promptMejorado">Redacte su prompt especializado uniendo todos estos detalles:</label>
-                <textarea id="promptMejorado" placeholder="Escriba aquí aplicando su propio estilo a cada punto..."></textarea>
-            </div>
-            
-            <button class="btn btn-volver" onclick="mostrarSeccion('seccion3')">
-                👈 Volver al cuadro C.L.A.R.O.
-            </button>
-
-            <!-- Botón de Descarga Paso 4 -->
-            <button class="btn" onclick="prepararDescarga('promptMejorado', 'Instrucción Especializada')">
-                Presione aquí para descargar su tarjeta final y, por favor, envíela al grupo de WhatsApp 💬😃
-            </button>
-            
-            <div id="mensajeFinal" class="hidden" style="text-align: center; color: #38bdf8; font-size: 1.3rem; font-weight: bold; margin-top: 1.5rem;">
-                ¡Excelente trabajo! Busque la imagen descargada en su dispositivo y compártala en el grupo.
             </div>
         </div>
 
