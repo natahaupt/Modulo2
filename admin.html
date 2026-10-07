@@ -36,7 +36,7 @@
 
         /* TABLA DE RÚBRICA POR COMPETENCIAS */
         .tabla-contenedor { overflow-x: auto; background: #1e293b; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); padding: 1px; }
-        table { width: 100%; min-width: 1000px; border-collapse: collapse; text-align: left; }
+        table { width: 100%; min-width: 1050px; border-collapse: collapse; text-align: left; }
         th { background: #0f172a; color: #38bdf8; padding: 12px 10px; font-size: 0.95rem; border-bottom: 2px solid rgba(255,255,255,0.1); line-height: 1.3; cursor: help; }
         th span { display: block; font-size: 0.75rem; color: #94a3b8; font-weight: normal; margin-top: 3px; }
         td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #e2e8f0; vertical-align: middle; }
@@ -75,20 +75,21 @@
                     <tr>
                         <th style="width: 15%;">Estudiante</th>
                         <th style="width: 8%;">Estado</th>
-                        <th title="¿Demuestra comprender y aplicar los 5 elementos de C.L.A.R.O.?">1. Metodología <span>(Saber)</span></th>
-                        <th title="¿Su instrucción especializada es precisa, coherente y sin contradicciones?">2. Precisión <span>(Saber Hacer)</span></th>
-                        <th title="¿Hay un salto de calidad claro entre su prompt básico y el especializado?">3. Evolución <span>(Saber Hacer)</span></th>
-                        <th title="¿La justificación de su autoevaluación es honesta, crítica y madura?">4. Autocrítica <span>(Saber Ser)</span></th>
-                        <th title="¿Envió su imagen al grupo? ¿Mostró curiosidad y creatividad?">5. Participación <span>(Decidir/Innovar)</span></th>
-                        <th style="width: 10%; text-align: center;">Total (25)</th>
+                        <th style="width: 8%; text-align: center;" title="Nota que el estudiante se puso a sí mismo">AutoEval. <span>(Sobre 6)</span></th>
+                        <th title="Saber: Comprende la lógica de la metodología y la IA">Comprensión <span>(Saber)</span></th>
+                        <th title="Saber Hacer: Redacta y estructura prompts con precisión">Escritura <span>(Saber Hacer)</span></th>
+                        <th title="Saber Ser: Se involucra y participa en la dinámica">Participación <span>(Saber Ser)</span></th>
+                        <th title="Saber Ser: Cumple con los tiempos establecidos">Puntualidad <span>(Saber Ser)</span></th>
+                        <th title="Innovación: Explora más allá de lo básico, propone ideas">Curiosidad <span>(Transformar)</span></th>
+                        <th style="width: 10%; text-align: center;">Total Docente <span>(Sobre 25)</span></th>
                     </tr>
                 </thead>
                 <tbody id="cuerpoTabla">
-                    <tr><td colspan="8" style="text-align:center; color:#94a3b8;">Esperando estudiantes...</td></tr>
+                    <tr><td colspan="9" style="text-align:center; color:#94a3b8;">Esperando estudiantes...</td></tr>
                 </tbody>
             </table>
         </div>
-        <p style="text-align: center; color: #64748b; font-size: 0.9rem; margin-top: 15px;">* Pase el ratón sobre los títulos de la tabla para recordar qué evalúa cada criterio. (Las notas se borran al recargar la página).</p>
+        <p style="text-align: center; color: #64748b; font-size: 0.9rem; margin-top: 15px;">* Las notas docentes calculadas se reinician al actualizar la página. Se sugiere capturar pantalla de sus calificaciones finales.</p>
     </div>
 
     <!-- SCRIPT PRINCIPAL Y FIREBASE -->
@@ -137,7 +138,7 @@
             }
         };
 
-        // Calcular la nota final en base a las 5 competencias
+        // Calcular la nota final docente en base a las 5 competencias
         window.calcularNota = function(idFila) {
             let total = 0;
             for(let i=1; i<=5; i++) {
@@ -154,10 +155,9 @@
             
             contenedor.innerHTML = ""; 
             
-            // Solo limpiamos la tabla si realmente no hay nadie
             if (snapshot.empty) {
                 contenedor.innerHTML = '<p style="text-align:center; width:100%; color:#94a3b8;">Esperando las respuestas de los estudiantes...</p>';
-                cuerpoTabla.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#94a3b8;">Esperando estudiantes...</td></tr>';
+                cuerpoTabla.innerHTML = '<tr><td colspan="9" style="text-align:center; color:#94a3b8;">Esperando estudiantes...</td></tr>';
                 return;
             } else {
                 if(cuerpoTabla.innerHTML.includes("Esperando estudiantes")) {
@@ -179,6 +179,7 @@
                         especializada: null,
                         autoevaluacion: false,
                         autoEvalTexto: "",
+                        autoEvalPuntaje: "-",
                         primeraFecha: tiempoEnMilisegundos,
                         docIds: [],
                         idLimpio: nombreClave.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '') 
@@ -196,13 +197,19 @@
                     estudiantes[nombreClave].especializada = data.prompt;
                 } else if (data.tipo.includes("Autoevaluación")) {
                     estudiantes[nombreClave].autoevaluacion = true;
-                    estudiantes[nombreClave].autoEvalTexto = data.prompt; // Guarda la reflexión del alumno
+                    estudiantes[nombreClave].autoEvalTexto = data.prompt; 
+                    
+                    // Extraer mágicamente el puntaje que se puso el alumno
+                    const matchNota = data.prompt.match(/Puntaje:\s*(\d+)/);
+                    if(matchNota && matchNota[1]) {
+                        estudiantes[nombreClave].autoEvalPuntaje = matchNota[1];
+                    }
                 }
             });
 
             const listaOrdenada = Object.values(estudiantes).sort((a, b) => a.primeraFecha - b.primeraFecha);
 
-            // Opciones de calificación según Rúbrica
+            // Opciones de calificación docente
             const opcionesSelect = `
                 <option value="0">0 - Sin evidencia</option>
                 <option value="1">1 - Deficiente</option>
@@ -240,13 +247,15 @@
                 html += `</div>`;
 
                 let estadoBadge = "";
+                let badgeAutoevalHTML = `<div style="text-align:center; font-weight:bold; color:#94a3b8;">- / 6</div>`;
+
                 if (est.autoevaluacion) {
-                    // Muestra la reflexión del estudiante para que la profesora pueda leerla y calificar
                     html += `<div class="etiqueta-estado estado-ok">
                                 <strong>✅ Autoevaluación del alumno:</strong><br>
                                 <span style="font-size:0.85rem; font-weight:normal; font-style:italic;">"${est.autoEvalTexto}"</span>
                              </div>`;
                     estadoBadge = `<span class="estado-badge bg-verde">Finalizado</span>`;
+                    badgeAutoevalHTML = `<div style="text-align:center; font-weight:bold; color:#4ade80; background: rgba(74, 222, 128, 0.1); padding: 5px; border-radius: 8px;">${est.autoEvalPuntaje} / 6</div>`;
                 } else {
                     html += `<div class="etiqueta-estado estado-espera">⏳ Autoevaluación en espera...</div>`;
                     estadoBadge = `<span class="estado-badge bg-rojo">En Proceso</span>`;
@@ -266,6 +275,7 @@
                     fila.innerHTML = `
                         <td style="font-weight:bold; font-size:1.05rem;">${est.nombreOriginal}</td>
                         <td id="estado_${est.idLimpio}">${estadoBadge}</td>
+                        <td id="autoeval_${est.idLimpio}">${badgeAutoevalHTML}</td>
                         <td><select id="c1_${est.idLimpio}" onchange="calcularNota('${est.idLimpio}')">${opcionesSelect}</select></td>
                         <td><select id="c2_${est.idLimpio}" onchange="calcularNota('${est.idLimpio}')">${opcionesSelect}</select></td>
                         <td><select id="c3_${est.idLimpio}" onchange="calcularNota('${est.idLimpio}')">${opcionesSelect}</select></td>
@@ -275,11 +285,13 @@
                     `;
                     cuerpoTabla.appendChild(fila);
                 } else {
+                    // Si ya existe, solo actualizamos el estado y la autoevaluación (por si acabó de completarlo)
                     document.getElementById(`estado_${est.idLimpio}`).innerHTML = estadoBadge;
+                    document.getElementById(`autoeval_${est.idLimpio}`).innerHTML = badgeAutoevalHTML;
                 }
             });
 
-            // Limpiar filas de alumnos que hayan sido borrados
+            // Limpiar filas de alumnos borrados
             Array.from(cuerpoTabla.children).forEach(fila => {
                 if (fila.id && !alumnosActuales.includes(fila.id)) {
                     cuerpoTabla.removeChild(fila);
